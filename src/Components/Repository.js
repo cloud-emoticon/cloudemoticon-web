@@ -40,7 +40,7 @@ class Repository extends Component {
     } else {
       const categoryItems = this.state.data['categories'].map((category, i) => {
         return (
-          <Category key={i} data={category}/>
+          <Category key={i} data={category} snackbarOpen={this.props.snackbarOpen}/>
         )
       })
       return <List>{categoryItems}</List>

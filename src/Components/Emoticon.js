@@ -7,7 +7,11 @@ const Emoticon = (props) => {
   const emoticon = data['emoticon']
   const description = data['description']
   return (
-    <CopyToClipboard text={emoticon}>
+    <CopyToClipboard
+      text={emoticon}
+      onCopy={() => {
+        props.snackbarOpen(`Copied ${emoticon}`)
+      }}>
       <ListItem
         primaryText={emoticon}
         secondaryText={description}
