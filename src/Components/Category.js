@@ -1,20 +1,17 @@
 import React from 'react'
 import Emoticon from './Emoticon'
+import {ListItem} from 'material-ui/List';
 
 const Category = (props) => {
   const data = props.data;
   const emoticonItems = data['entries'].map((entry, i) => {
-    return (
-      <li key={i}>
-        <Emoticon data={entry}/>
-      </li>
-    )
+    return <Emoticon key={i} data={entry}/>
   })
   return (
-    <div>
-      <div>{data['name']}</div>
-      <ul>{emoticonItems}</ul>
-    </div>
+    <ListItem
+      primaryText={data['name']}
+      nestedItems={emoticonItems}
+    />
   )
 }
 

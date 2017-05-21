@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Category from './Category';
+import {List} from 'material-ui/List';
 
 class Repository extends Component {
   constructor(props) {
@@ -39,12 +40,10 @@ class Repository extends Component {
     } else {
       const categoryItems = this.state.data['categories'].map((category, i) => {
         return (
-          <li key={i}>
-            <Category data={category} />
-          </li>
+          <Category key={i} data={category}/>
         )
       })
-      return <ul>{categoryItems}</ul>
+      return <List>{categoryItems}</List>
     }
   }
 }

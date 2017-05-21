@@ -1,17 +1,17 @@
 import React from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard';
+import {ListItem} from 'material-ui/List';
 
 const Emoticon = (props) => {
   const data = props.data;
   const emoticon = data['emoticon']
+  const description = data['description']
   return (
-    <CopyToClipboard
-      text={emoticon}
-      onCopy={() => {console.log(`Copied ${emoticon}`)}}>
-      <div>
-        <div>{data['emoticon']}</div>
-        <div>{data['description']}</div>
-      </div>
+    <CopyToClipboard text={emoticon}>
+      <ListItem
+        primaryText={emoticon}
+        secondaryText={description}
+      />
     </CopyToClipboard>
   )
 }
