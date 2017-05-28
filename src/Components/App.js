@@ -12,12 +12,81 @@ import SettingsIcon from 'material-ui/svg-icons/action/settings'
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
+const DEFAULT_REPO_URL = 'https://ktachibana.party/cloudemoticon/default.json'
+
 class App extends Component {
   constructor() {
     super()
     this.state = {
+      repo: {
+        url: this.getPersistRepoUrl(),
+        data: undefined,
+        loading: true,
+        error: false
+      },
       snackbar: false,
     };
+    this.fetchRepo(this.getPersistRepoUrl())
+  }
+  fetchRepo = (fetchUrl) => {
+    fetch(fetchUrl)
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        }
+        throw new Error(`Unable to download ${fetchUrl}`)
+      })
+      .then(data => {
+        this.setState({
+          repo: {
+            url: fetchUrl,
+            data: data,
+            loading: false,
+            error: false
+          }
+        })
+      })
+      .catch(error => {
+        this.setState({
+          repo: {
+            url: fetchUrl,
+            data: undefined,
+            loading: false,
+            error: error
+          }
+        })
+      })
+  }
+  getRepoUrl = () => {
+    return this.state.repo.url
+  }
+  setRepoUrl = (newUrl) => {
+    this.setState({
+      repo: {
+        url: newUrl,
+        data: undefined,
+        loading: true,
+        error: false
+      }
+    })
+    this.setPersistRepoUrl(newUrl)
+    this.fetchRepo(newUrl)
+    this.snackbarOpen('Repository URL set')
+  }
+  getPersistRepoUrl = () => {
+    return window.localStorage.getItem('repoUrl') || DEFAULT_REPO_URL
+  }
+  setPersistRepoUrl = (newUrl) => {
+    window.localStorage.setItem('repoUrl', newUrl)
+  }
+  getRepoData = () => {
+    return this.state.repo.data
+  }
+  ifRepoIsLoading = () => {
+    return this.state.repo.loading
+  }
+  getRepoError = () => {
+    return this.state.repo.error
   }
   snackbarOpen = (text) => {
     this.setState({
@@ -35,17 +104,20 @@ class App extends Component {
         <div>
           <Tabs>
             <Tab
-              icon={<ListIcon/>}
-              label="Repository" >
+              icon={<ListIcon/>}>
               <Repository
                 snackbarOpen={this.snackbarOpen}
-                url="https://ktachibana.party/cloudemoticon/default.json"
+                getRepoData={this.getRepoData}
+                ifRepoIsLoading={this.ifRepoIsLoading}
+                getRepoError={this.getRepoError}
               />
             </Tab>
             <Tab
-              icon={<SettingsIcon/>}
-              label="Settings" >
-              <Settings/>
+              icon={<SettingsIcon/>}>
+              <Settings
+                getRepoUrl={this.getRepoUrl}
+                setRepoUrl={this.setRepoUrl}
+              />
             </Tab>
           </Tabs>
           <Snackbar
