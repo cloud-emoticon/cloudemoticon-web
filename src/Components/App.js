@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Favorites from './Favorites'
 import Repository from './Repository'
 import Settings from './Settings'
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -7,6 +8,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Snackbar from 'material-ui/Snackbar';
 import ListIcon from 'material-ui/svg-icons/action/list'
 import SettingsIcon from 'material-ui/svg-icons/action/settings'
+import FavoriteIcon from 'material-ui/svg-icons/action/favorite'
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -103,6 +105,10 @@ class App extends Component {
       <MuiThemeProvider>
         <div>
           <Tabs>
+            <Tab
+              icon={<FavoriteIcon/>}>
+              <Favorites/>
+            </Tab>
             <Tab
               icon={<ListIcon/>}>
               <Repository
