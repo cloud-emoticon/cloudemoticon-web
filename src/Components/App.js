@@ -26,6 +26,7 @@ class App extends Component {
         loading: true,
         error: false
       },
+      favorites: [],
       snackbar: false,
     };
     this.fetchRepo(this.getPersistRepoUrl())
@@ -90,6 +91,30 @@ class App extends Component {
   getRepoError = () => {
     return this.state.repo.error
   }
+  getFavorites = () => {
+    return this.state.favorites
+  }
+  addFavorite = (emoticon, description) => {
+    const favorites = this.state.favorites;
+    favorites.push({emoticon, description})
+    this.setState({favorites})
+  }
+  _findFavoriteIndex = (emoticon, description) => {
+    return this.state.favorites.findIndex(({e, d}) => {
+      return e === emoticon && d === description
+    })
+  }
+  removeFavorite = (emoticon, description) => {
+    const i = this._findFavoriteIndex(emoticon, description)
+    if (i !== -1) {
+      const favorites = this.state.favorites;
+      favorites.splice(i, 1)
+      this.setState({favorites})
+    }
+  }
+  isInFavorite = (emoticon, description) => {
+    return this._findFavoriteIndex(emoticon, description) !== -1
+  }
   snackbarOpen = (text) => {
     this.setState({
       snackbar: text,
@@ -107,7 +132,11 @@ class App extends Component {
           <Tabs>
             <Tab
               icon={<FavoriteIcon/>}>
-              <Favorites/>
+              <Favorites
+                getFavorites={this.getFavorites}
+                addFavorite={this.addFavorite}
+                removeFavorite={this.removeFavorite}
+              />
             </Tab>
             <Tab
               icon={<ListIcon/>}>
