@@ -99,9 +99,9 @@ class App extends Component {
     favorites.push({emoticon, description})
     this.setState({favorites})
   }
-  _findFavoriteIndex = (emoticon, description) => {
-    return this.state.favorites.findIndex(({e, d}) => {
-      return e === emoticon && d === description
+  _findFavoriteIndex = (targetEmoticon, targetDescription) => {
+    return this.state.favorites.findIndex(({emoticon, description}) => {
+      return targetEmoticon === emoticon && targetDescription === description
     })
   }
   removeFavorite = (emoticon, description) => {
@@ -133,9 +133,11 @@ class App extends Component {
             <Tab
               icon={<FavoriteIcon/>}>
               <Favorites
+                snackbarOpen={this.snackbarOpen}
                 getFavorites={this.getFavorites}
                 addFavorite={this.addFavorite}
                 removeFavorite={this.removeFavorite}
+                isInFavorite={this.isInFavorite}
               />
             </Tab>
             <Tab
@@ -145,6 +147,9 @@ class App extends Component {
                 getRepoData={this.getRepoData}
                 ifRepoIsLoading={this.ifRepoIsLoading}
                 getRepoError={this.getRepoError}
+                addFavorite={this.addFavorite}
+                removeFavorite={this.removeFavorite}
+                isInFavorite={this.isInFavorite}
               />
             </Tab>
             <Tab

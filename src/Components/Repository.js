@@ -17,7 +17,14 @@ const Repository = (props) => {
     const data = props.getRepoData()
     const categoryItems = data['categories'].map((category, i) => {
       return (
-        <Category key={i} data={category} snackbarOpen={props.snackbarOpen}/>
+        <Category
+          key={i}
+          data={category}
+          snackbarOpen={props.snackbarOpen}
+          addFavorite={props.addFavorite}
+          removeFavorite={props.removeFavorite}
+          isInFavorite={props.isInFavorite}
+        />
       )
     })
     return <List>{categoryItems}</List>

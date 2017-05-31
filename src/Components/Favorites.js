@@ -6,9 +6,12 @@ const Favorites = (props) => {
     const items = props.getFavorites().map((item, i) => {
         return (
             <Emoticon
-                ket={i}
-                emoticon={item['emoticon']}
-                description={item['description']}
+                key={i}
+                data={item}
+                snackbarOpen={props.snackbarOpen}
+                addFavorite={props.addFavorite}
+                removeFavorite={props.removeFavorite}
+                isInFavorite={props.isInFavorite}
             />
         )
     })
