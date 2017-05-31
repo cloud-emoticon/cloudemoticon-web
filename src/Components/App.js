@@ -26,7 +26,7 @@ class App extends Component {
         loading: true,
         error: false
       },
-      favorites: [],
+      favorites: this.getPersistFavorites(),
       snackbar: false,
     };
     this.fetchRepo(this.getPersistRepoUrl())
@@ -98,6 +98,7 @@ class App extends Component {
     const favorites = this.state.favorites;
     favorites.push({emoticon, description})
     this.setState({favorites})
+    this.setPersistFavorites(favorites)
   }
   _findFavoriteIndex = (targetEmoticon, targetDescription) => {
     return this.state.favorites.findIndex(({emoticon, description}) => {
@@ -110,10 +111,17 @@ class App extends Component {
       const favorites = this.state.favorites;
       favorites.splice(i, 1)
       this.setState({favorites})
+      this.setPersistFavorites(favorites)
     }
   }
   isInFavorite = (emoticon, description) => {
     return this._findFavoriteIndex(emoticon, description) !== -1
+  }
+  getPersistFavorites = () => {
+    return JSON.parse(window.localStorage.getItem('favorites')) || []
+  }
+  setPersistFavorites = (newFavorites) => {
+    window.localStorage.setItem('favorites', JSON.stringify(newFavorites))
   }
   snackbarOpen = (text) => {
     this.setState({
