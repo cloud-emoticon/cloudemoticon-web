@@ -23,12 +23,14 @@ const Emoticon = (props) => {
             onClick={e => {
               e.stopPropagation()
               props.removeFavorite(emoticon, description)
+              props.snackbarOpen(`Removed ${emoticon} from favorites`)
             }}
           /> :
           <NoFavoriteIcon
             onClick={e => {
               e.stopPropagation()
               props.addFavorite(emoticon, description)
+              props.snackbarOpen(`Added ${emoticon} to favorites`)
             }}
           />
         }
