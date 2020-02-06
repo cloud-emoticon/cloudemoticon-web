@@ -4,13 +4,13 @@ Cloud Emoticon as a webapp
 
 ## Run locally
 ```bash
-npm install
-npm start
+yarn install
+yarn start
 ```
 
 ## Build for production
 ```bash
-npm run build
+yarn build
 # Then find production site under build/
 ```
 
