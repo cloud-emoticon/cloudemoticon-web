@@ -34,7 +34,6 @@ class Category extends React.Component {
         <ListItem button onClick={e => {
           e.preventDefault();
           this.setState({
-            ...this.state,
             open: !this.state.open
           })
         }}>

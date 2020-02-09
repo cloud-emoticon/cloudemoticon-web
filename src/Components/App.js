@@ -143,7 +143,6 @@ class App extends Component {
             onChange={(e, newTabIndex) => {
               e.preventDefault();
               this.setState({
-                ...this.state,
                 tabIndex: newTabIndex
               })
             }}
@@ -184,7 +183,11 @@ class App extends Component {
           open={this.state.snackbar !== false}
           message={this.state.snackbar}
           autoHideDuration={2000}
-          onRequestClose={this.snackbarClose}
+          onClose={this.snackbarClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
         />
       </React.Fragment>
     );
