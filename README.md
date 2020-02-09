@@ -1,17 +1,28 @@
-# cloudemoticon-webapp
+# cloudemoticon2
 
-Cloud Emoticon as a webapp
+Cloud Emoticon 2, as a universal web application
 
-## Run locally
+## Prereqs
+* `Node.js`
+* `yarn`
+* [Additional dependencies for running iOS/Android/Electron apps](https://capacitor.ionicframework.com/docs/getting-started/dependencies/)
+
+## Prepare
 ```bash
 yarn install
+```
+
+## Run locally as a webapp
+```bash
 yarn start
 ```
 
-## Build for production
+## Build webapp for production
 ```bash
 yarn build
 # Then find production site under build/
 ```
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+## Frameworks
+* The project is bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app)
+* The universal (e.g. iOS/Android/Electron) capability is backed by [Capacitor](https://capacitor.ionicframework.com/)

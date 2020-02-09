@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/cloudemoticon-webapp.iml" filepath="$PROJECT_DIR$/.idea/cloudemoticon-webapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/cloudemoticon2.iml" filepath="$PROJECT_DIR$/.idea/cloudemoticon2.iml" />
     </modules>
   </component>
 </project>
