@@ -25,7 +25,7 @@ yarn build
 
 ## Build webapp and open Android project
 ```bash
-yarn android
+yarn open-android
 ```
 
 ## Frameworks
