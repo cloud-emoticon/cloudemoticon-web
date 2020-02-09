@@ -12,15 +12,20 @@ Cloud Emoticon 2, as a universal web application
 yarn install
 ```
 
-## Run locally as a webapp
+## Run as webapp
 ```bash
 yarn start
 ```
 
-## Build webapp for production
+## Build webapp
 ```bash
 yarn build
 # Then find production site under build/
+```
+
+## Build webapp and open Android project
+```bash
+yarn android
 ```
 
 ## Frameworks
