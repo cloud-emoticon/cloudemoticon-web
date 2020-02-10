@@ -4,5 +4,8 @@
   "bundledWebRuntime": false,
   "npmClient": "yarn",
   "webDir": "build",
-  "cordova": {}
+  "cordova": {},
+  "ios": {
+    "contentInset": "always"
+  }
 }
