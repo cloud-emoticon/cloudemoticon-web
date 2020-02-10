@@ -18,10 +18,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && npx cap copy",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "open-android": "yarn build && npx cap open android"
+    "sync-version": "node sync-versions.js",
+    "sync": "npx cap copy && yarn sync-version",
+    "open-android": "yarn sync && npx cap open android"
   },
   "browserslist": [
     ">0.2%",
