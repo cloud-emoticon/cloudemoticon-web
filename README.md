@@ -23,7 +23,12 @@ yarn build
 # Then find production site under build/
 ```
 
-## Build webapp and open Android project
+## Sync webapp to Capacitor apps
+```bash
+yarn sync
+```
+
+## Sync webapp and open Android project
 ```bash
 yarn open-android
 ```

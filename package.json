@@ -23,7 +23,7 @@
     "eject": "react-scripts eject",
     "sync-version": "node sync-versions.js",
     "sync": "npx cap copy && yarn sync-version",
-    "open-android": "yarn sync && npx cap open android"
+    "open-android": "yarn build && yarn sync && npx cap open android"
   },
   "browserslist": [
     ">0.2%",
