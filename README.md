@@ -25,7 +25,7 @@ yarn build
 
 ## Sync webapp to Capacitor apps
 ```bash
-yarn sync
+yarn sync-cap
 ```
 
 ## Sync webapp and open Android project
