@@ -25,7 +25,8 @@
     "sync-version": "node sync-versions.js",
     "sync": "npx cap copy && yarn sync-version",
     "open-android": "yarn build && yarn sync && npx cap open android",
-    "open-ios": "yarn build && yarn sync && npx cap open ios"
+    "open-ios": "yarn build && yarn sync && npx cap open ios",
+    "open-electron": "yarn build && yarn sync && npx cap open electron"
   },
   "browserslist": [
     ">0.2%",
