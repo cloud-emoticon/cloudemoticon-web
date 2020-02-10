@@ -23,9 +23,3 @@ projectPbxproj = projectPbxproj.replace(
   `MARKETING_VERSION = ${version};`
 );
 fs.writeFileSync(projectPbxprojPath, projectPbxproj);
-
-console.log("Syncing Electron version");
-const electronPackageJsonPath = path.join('electron', 'package.json');
-let electronPackageJson = JSON.parse(fs.readFileSync(electronPackageJsonPath, 'utf-8'));
-electronPackageJson['version'] = version;
-fs.writeFileSync(electronPackageJsonPath, JSON.stringify(electronPackageJson, null, 2));
