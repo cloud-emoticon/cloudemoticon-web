@@ -1040,6 +1040,11 @@
   dependencies:
     tslib "^1.9.0"
 
+"@capacitor/ios@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-1.5.0.tgz#519ae289d5164a218203e6492fd757bc7649aab9"
+  integrity sha512-YjKSQp51Kxjn+3bc2U/VBYQqfHMUbdDKTMiQwE0WXbsqckvKUqLiuz2OWaew0uirxFfZbUqDsvox4jGpY2OoPg==
+
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"

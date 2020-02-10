@@ -7,6 +7,7 @@
     "@capacitor/android": "^1.5.0",
     "@capacitor/cli": "^1.5.0",
     "@capacitor/core": "^1.5.0",
+    "@capacitor/ios": "^1.5.0",
     "@material-ui/core": "^4.9.1",
     "@material-ui/icons": "^4.9.1",
     "copy-to-clipboard": "^3.2.1",
@@ -23,7 +24,8 @@
     "eject": "react-scripts eject",
     "sync-version": "node sync-versions.js",
     "sync": "npx cap copy && yarn sync-version",
-    "open-android": "yarn build && yarn sync && npx cap open android"
+    "open-android": "yarn build && yarn sync && npx cap open android",
+    "open-ios": "yarn build && yarn sync && npx cap open ios"
   },
   "browserslist": [
     ">0.2%",
