@@ -19,7 +19,7 @@ projectPbxproj = projectPbxproj.replace(
   `CURRENT_PROJECT_VERSION = ${vercode};`
 );
 projectPbxproj = projectPbxproj.replace(
-  /MARKETING_VERSION = *;/g,
+  /MARKETING_VERSION = [0-9.]*;/g,
   `MARKETING_VERSION = ${version};`
 );
 fs.writeFileSync(projectPbxprojPath, projectPbxproj);
