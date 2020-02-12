@@ -116,6 +116,14 @@ class App extends Component {
   isInFavorite = (emoticon, description) => {
     return this._findFavoriteIndex(emoticon, description) !== -1
   };
+  reorderFavorite = (index1, index2) => {
+    const favorites = this.state.favorites;
+    const item1 = favorites[index1];
+    favorites[index1] = favorites[index2];
+    favorites[index2] = item1;
+    this.setState({favorites});
+    this.setPersistFavorites(favorites)
+  };
   getPersistFavorites = () => {
     return JSON.parse(window.localStorage.getItem('favorites')) || []
   };
