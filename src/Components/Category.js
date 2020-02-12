@@ -1,5 +1,5 @@
 import React from 'react'
-import Emoticon from './Emoticon'
+import RepositoryEmoticon from './RepositoryEmoticon'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from "@material-ui/core/ListItemText";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -19,7 +19,7 @@ class Category extends React.Component {
     const data = this.props.data;
     const emoticonItems = data['entries'].map((entry, i) => {
       return (
-        <Emoticon
+        <RepositoryEmoticon
             key={i}
             data={entry}
             snackbarOpen={this.props.snackbarOpen}

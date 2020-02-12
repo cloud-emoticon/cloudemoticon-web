@@ -1,5 +1,5 @@
 import React from 'react'
-import Emoticon from './Emoticon'
+import RepositoryEmoticon from './RepositoryEmoticon'
 import List from '@material-ui/core/List';
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -24,7 +24,7 @@ const Favorites = (props) => {
   }
   const items = favorites.map((item, i) => {
     return (
-      <Emoticon
+      <RepositoryEmoticon
         key={i}
         data={item}
         snackbarOpen={props.snackbarOpen}
