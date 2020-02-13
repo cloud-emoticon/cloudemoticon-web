@@ -6,7 +6,6 @@ import History from "./History";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Snackbar from '@material-ui/core/Snackbar';
-import ListIcon from '@material-ui/icons/List'
 import SettingsIcon from '@material-ui/icons/Settings'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import HistoryIcon from '@material-ui/icons/History'
@@ -16,7 +15,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete"
 import AddIcon from "@material-ui/icons/Add"
+import KitchenIcon from "@material-ui/icons/Kitchen"
 import IconButton from "@material-ui/core/IconButton";
+import RepoManager from "./RepoManager";
 
 const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
@@ -125,14 +126,6 @@ class App extends Component {
   isInFavorite = (emoticon, description) => {
     return this._findFavoriteIndex(emoticon, description) !== -1
   };
-  reorderFavorite = (index1, index2) => {
-    const favorites = this.state.favorites;
-    const item1 = favorites[index1];
-    favorites[index1] = favorites[index2];
-    favorites[index2] = item1;
-    this.setState({favorites});
-    this.setPersistFavorites(favorites)
-  };
   getPersistentFavorites = () => {
     return JSON.parse(window.localStorage.getItem('favorites')) || []
   };
@@ -200,7 +193,7 @@ class App extends Component {
         <AppBar position='static'>
           <Toolbar>
             <Typography variant="h5">
-              Cloud Emoticon
+              Cloud Emoticon 2
             </Typography>
             {this.renderMenuAction()}
           </Toolbar>
@@ -212,12 +205,13 @@ class App extends Component {
                 tabIndex: newTabIndex
               })
             }}
-            variant='fullWidth'
+            variant='scrollable'
           >
-            <Tab value={0} icon={<FavoriteIcon/>}/>
-            <Tab value={1} icon={<HistoryIcon/>}/>
-            <Tab value={2} icon={<ListIcon/>}/>
-            <Tab value={3} icon={<SettingsIcon/>}/>
+            <Tab value={0} icon={<FavoriteIcon/>} />
+            <Tab value={1} icon={<HistoryIcon/>} />
+            <Tab value={2} label="KT's favorites"/>
+            <Tab value={3} icon={<KitchenIcon/>} />
+            <Tab value={4} icon={<SettingsIcon/>} />
           </Tabs>
         </AppBar>
         <div hidden={this.state.tabIndex !== 0}>
@@ -250,6 +244,9 @@ class App extends Component {
           />
         </div>
         <div hidden={this.state.tabIndex !== 3}>
+          <RepoManager />
+        </div>
+        <div hidden={this.state.tabIndex !== 4}>
           <Settings
             getRepoUrl={this.getRepoUrl}
             setRepoUrl={this.setRepoUrl}
