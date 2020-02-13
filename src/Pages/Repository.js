@@ -1,5 +1,5 @@
 import React from 'react';
-import Category from './Category';
+import Category from '../Components/Category';
 import List from '@material-ui/core/List';
 import CircularProgress from '@material-ui/core/CircularProgress';
 

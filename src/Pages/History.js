@@ -1,12 +1,12 @@
 import React from 'react'
-import RepositoryEmoticon from './RepositoryEmoticon'
+import BaseEmoticon from '../Components/BaseEmoticon'
 import List from '@material-ui/core/List';
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
-const Favorites = (props) => {
-  const favorites = props.getFavorites();
-  if (!favorites || favorites.length === 0) {
+const History = (props) => {
+  const history = props.getHistory();
+  if (!history || history.length === 0) {
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -16,26 +16,26 @@ const Favorites = (props) => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant='h6'>
-            You don't have any bookmarks
+            You don't have any history
           </Typography>
         </Grid>
       </Grid>
     )
   }
-  const items = favorites.map((item, i) => {
+  const items = history.map((emoticon, i) => {
     return (
-      <RepositoryEmoticon
+      <BaseEmoticon
         key={i}
-        data={item}
+        data={{
+          emoticon,
+          description: null
+        }}
         addHistory={props.addHistory}
         snackbarOpen={props.snackbarOpen}
-        addFavorite={props.addFavorite}
-        removeFavorite={props.removeFavorite}
-        isInFavorite={props.isInFavorite}
       />
     )
   });
   return <List>{items}</List>
 };
 
-export default Favorites
+export default History

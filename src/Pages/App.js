@@ -200,7 +200,7 @@ class App extends Component {
         <AppBar position='static'>
           <Toolbar>
             <Typography variant="h5">
-              Cloud Emoticon 2
+              Cloud Emoticon
             </Typography>
             {this.renderMenuAction()}
           </Toolbar>
