@@ -16,122 +16,64 @@ import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete"
 import AddIcon from "@material-ui/icons/Add"
 import KitchenIcon from "@material-ui/icons/Kitchen"
+import RefreshIcon from "@material-ui/icons/Refresh"
 import IconButton from "@material-ui/core/IconButton";
 import RepoManager from "./RepoManager";
 
-const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
+export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      repo: {
-        url: this.getPersistRepoUrl(),
-        data: undefined,
-        loading: true,
-        error: false
-      },
       favorites: this.getPersistentFavorites(),
       history: this.getPersistentHistory(),
+      repos: this.getPersistentRepos(),
       snackbar: false,
       tabIndex: 0,
     };
-    this.fetchRepo(this.getPersistRepoUrl())
   }
 
-  fetchRepo = (fetchUrl) => {
-    fetch(fetchUrl)
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw new Error(`Unable to download ${fetchUrl}`)
-      })
-      .then(data => {
-        this.setState({
-          repo: {
-            url: fetchUrl,
-            data: data,
-            loading: false,
-            error: false
-          }
-        })
-      })
-      .catch(error => {
-        this.setState({
-          repo: {
-            url: fetchUrl,
-            data: undefined,
-            loading: false,
-            error: error
-          }
-        })
-      })
-  };
-  getRepoUrl = () => {
-    return this.state.repo.url
-  };
-  setRepoUrl = (newUrl) => {
-    this.setState({
-      repo: {
-        url: newUrl,
-        data: undefined,
-        loading: true,
-        error: false
-      }
-    });
-    this.setPersistRepoUrl(newUrl);
-    this.fetchRepo(newUrl);
-    this.snackbarOpen('Repository URL set')
-  };
-  getPersistRepoUrl = () => {
-    return window.localStorage.getItem('repoUrl') || DefaultRepoUrl
-  };
-  setPersistRepoUrl = (newUrl) => {
-    window.localStorage.setItem('repoUrl', newUrl)
-  };
-  getRepoData = () => {
-    return this.state.repo.data
-  };
-  ifRepoIsLoading = () => {
-    return this.state.repo.loading
-  };
-  getRepoError = () => {
-    return this.state.repo.error
-  };
   getFavorites = () => {
     return this.state.favorites
   };
+
   addFavorite = (emoticon, description) => {
     const favorites = this.state.favorites;
     favorites.push({emoticon, description});
     this.setState({favorites});
-    this.setPersistFavorites(favorites)
+    this.setPersistentFavorites(favorites)
   };
+
   _findFavoriteIndex = (targetEmoticon, targetDescription) => {
     return this.state.favorites.findIndex(({emoticon, description}) => {
       return targetEmoticon === emoticon && targetDescription === description
     })
   };
+
   removeFavorite = (emoticon, description) => {
     const i = this._findFavoriteIndex(emoticon, description);
     if (i !== -1) {
       const favorites = this.state.favorites;
       favorites.splice(i, 1);
       this.setState({favorites});
-      this.setPersistFavorites(favorites)
+      this.setPersistentFavorites(favorites)
     }
   };
+
   isInFavorite = (emoticon, description) => {
     return this._findFavoriteIndex(emoticon, description) !== -1
   };
+
   getPersistentFavorites = () => {
     return JSON.parse(window.localStorage.getItem('favorites')) || []
   };
-  setPersistFavorites = (newFavorites) => {
+
+  setPersistentFavorites = (newFavorites) => {
     window.localStorage.setItem('favorites', JSON.stringify(newFavorites))
   };
+
   addHistory = (newEmoticon) => {
     let history = this.getPersistentHistory();
     history = [newEmoticon, ...history];
@@ -141,24 +83,52 @@ class App extends Component {
     this.setState({history});
     this.setPersistentHistory(history)
   };
+
   getHistory = () => {
     return this.state.history
   };
+
   clearHistory = () => {
     this.setState({history: []});
     this.setPersistentHistory([])
   };
+
   getPersistentHistory = () => {
     return JSON.parse(window.localStorage.getItem('history')) || []
   };
+
   setPersistentHistory = (newHistory) => {
     window.localStorage.setItem('history', JSON.stringify(newHistory))
   };
+
+  getRepos = () => {
+    return this.state.repos.map(repo => {
+      return {
+        ...repo,
+        fixed: repo.url === DefaultRepoUrl
+      }
+    });
+  };
+
+  getPersistentRepos = () => {
+    return JSON.parse(window.localStorage.getItem('repos')) || [
+      {
+        "name": "KT's favorites",
+        "url": DefaultRepoUrl
+      }
+    ]
+  };
+
+  setPersistentRepos = newRepos => {
+    window.localStorage.setItem('repos', JSON.stringify(newRepos))
+  };
+
   snackbarOpen = (text) => {
     this.setState({
       snackbar: text,
     });
   };
+
   snackbarClose = () => {
     this.setState({
       snackbar: false,
@@ -166,14 +136,16 @@ class App extends Component {
   };
 
   renderMenuAction = () => {
-    if (this.state.tabIndex === 0) {
+    const tabIndex = this.state.tabIndex;
+    const repoCount = this.state.repos.length;
+    if (tabIndex === 0) {
       return (
         <IconButton color="inherit">
           <AddIcon />
         </IconButton>
       )
     }
-    if (this.state.tabIndex === 1) {
+    if (tabIndex === 1) {
       return (
         <IconButton color="inherit" onClick={e => {
           e.preventDefault();
@@ -183,7 +155,73 @@ class App extends Component {
         </IconButton>
       )
     }
-    return null
+    if (tabIndex === 2 + repoCount) {
+      return (
+        <IconButton color="inherit">
+          <AddIcon />
+        </IconButton>
+      )
+    }
+    if (tabIndex === 2 + repoCount + 1) {
+      return null;
+    }
+    return (
+      <IconButton color="inherit">
+        <RefreshIcon />
+      </IconButton>
+    )
+  };
+
+  renderTabs = () => {
+    const repoTabs = this.state.repos.map((repo, i) => {
+      return <Tab key={2 + i} value={2 + i} label={repo.name} />
+    });
+    return [
+      (<Tab key={0} value={0} icon={<FavoriteIcon/>} />),
+      (<Tab key={1} value={1} icon={<HistoryIcon/>} />),
+      ...repoTabs,
+      (<Tab key={3} value={3} icon={<KitchenIcon/>} />),
+      (<Tab key={4} value={4} icon={<SettingsIcon/>} />)
+    ]
+  };
+
+  renderPages = () => {
+    const repoPages = this.state.repos.map(repo => {
+      return (
+        <Repository
+          url={repo.url}
+          snackbarOpen={this.snackbarOpen}
+          addFavorite={this.addFavorite}
+          removeFavorite={this.removeFavorite}
+          isInFavorite={this.isInFavorite}
+          addHistory={this.addHistory}
+        />
+      )
+    });
+    return [
+      <Favorites
+        snackbarOpen={this.snackbarOpen}
+        getFavorites={this.getFavorites}
+        addFavorite={this.addFavorite}
+        removeFavorite={this.removeFavorite}
+        isInFavorite={this.isInFavorite}
+        addHistory={this.addHistory}
+      />,
+      <History
+        snackbarOpen={this.snackbarOpen}
+        getHistory={this.getHistory}
+        addHistory={this.addHistory}
+      />,
+      ...repoPages,
+      <RepoManager getRepos={this.getRepos} />,
+      <Settings />
+    ].map((page, i  ) => {
+      return (
+        <div key={i} hidden={this.state.tabIndex !== i}>
+          {page}
+        </div>
+      )
+    })
   };
 
   render() {
@@ -207,51 +245,10 @@ class App extends Component {
             }}
             variant='scrollable'
           >
-            <Tab value={0} icon={<FavoriteIcon/>} />
-            <Tab value={1} icon={<HistoryIcon/>} />
-            <Tab value={2} label="KT's favorites"/>
-            <Tab value={3} icon={<KitchenIcon/>} />
-            <Tab value={4} icon={<SettingsIcon/>} />
+            {this.renderTabs()}
           </Tabs>
         </AppBar>
-        <div hidden={this.state.tabIndex !== 0}>
-          <Favorites
-            snackbarOpen={this.snackbarOpen}
-            getFavorites={this.getFavorites}
-            addFavorite={this.addFavorite}
-            removeFavorite={this.removeFavorite}
-            isInFavorite={this.isInFavorite}
-            addHistory={this.addHistory}
-          />
-        </div>
-        <div hidden={this.state.tabIndex !== 1}>
-          <History
-            snackbarOpen={this.snackbarOpen}
-            getHistory={this.getHistory}
-            addHistory={this.addHistory}
-          />
-        </div>
-        <div hidden={this.state.tabIndex !== 2}>
-          <Repository
-            snackbarOpen={this.snackbarOpen}
-            getRepoData={this.getRepoData}
-            ifRepoIsLoading={this.ifRepoIsLoading}
-            getRepoError={this.getRepoError}
-            addFavorite={this.addFavorite}
-            removeFavorite={this.removeFavorite}
-            isInFavorite={this.isInFavorite}
-            addHistory={this.addHistory}
-          />
-        </div>
-        <div hidden={this.state.tabIndex !== 3}>
-          <RepoManager />
-        </div>
-        <div hidden={this.state.tabIndex !== 4}>
-          <Settings
-            getRepoUrl={this.getRepoUrl}
-            setRepoUrl={this.setRepoUrl}
-          />
-        </div>
+        {this.renderPages()}
         <Snackbar
           open={this.state.snackbar !== false}
           message={this.state.snackbar}
