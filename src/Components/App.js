@@ -12,6 +12,11 @@ import FavoriteIcon from '@material-ui/icons/Favorite'
 import HistoryIcon from '@material-ui/icons/History'
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import DeleteIcon from "@material-ui/icons/Delete"
+import AddIcon from "@material-ui/icons/Add"
+import IconButton from "@material-ui/core/IconButton";
 
 const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
@@ -167,11 +172,38 @@ class App extends Component {
     });
   };
 
+  renderMenuAction = () => {
+    if (this.state.tabIndex === 0) {
+      return (
+        <IconButton color="inherit">
+          <AddIcon />
+        </IconButton>
+      )
+    }
+    if (this.state.tabIndex === 1) {
+      return (
+        <IconButton color="inherit" onClick={e => {
+          e.preventDefault();
+          this.clearHistory()
+        }}>
+          <DeleteIcon />
+        </IconButton>
+      )
+    }
+    return null
+  };
+
   render() {
     return (
       <React.Fragment>
         <CssBaseline/>
         <AppBar position='static'>
+          <Toolbar>
+            <Typography variant="h5">
+              Cloud Emoticon 2
+            </Typography>
+            {this.renderMenuAction()}
+          </Toolbar>
           <Tabs
             value={this.state.tabIndex}
             onChange={(e, newTabIndex) => {
