@@ -35,10 +35,6 @@ class App extends Component {
     };
   }
 
-  getFavorites = () => {
-    return this.state.favorites
-  };
-
   addFavorite = (emoticon, description) => {
     const favorites = this.state.favorites;
     favorites.push({emoticon, description});
@@ -84,10 +80,6 @@ class App extends Component {
     this.setPersistentHistory(history)
   };
 
-  getHistory = () => {
-    return this.state.history
-  };
-
   clearHistory = () => {
     this.setState({history: []});
     this.setPersistentHistory([])
@@ -102,7 +94,7 @@ class App extends Component {
   };
 
   addRepo = (newRepoName, newRepoUrl) => {
-    const repos = this.getRepos();
+    const repos = this.state.repos;
     repos.push({
       url: newRepoUrl,
       name: newRepoName
@@ -112,19 +104,10 @@ class App extends Component {
   };
 
   removeRepo = (repoUrl) => {
-    let repos = this.getRepos();
+    let repos = this.state.repos;
     repos = repos.filter(repo => repo.url !== repoUrl);
     this.setState({ repos });
     this.setPersistentRepos(repos)
-  };
-
-  getRepos = () => {
-    return this.state.repos.map(repo => {
-      return {
-        ...repo,
-        fixed: repo.url === DefaultRepoUrl
-      }
-    });
   };
 
   getPersistentRepos = () => {
@@ -218,21 +201,21 @@ class App extends Component {
     });
     return [
       <Favorites
+        favorites={this.state.favorites}
         snackbarOpen={this.snackbarOpen}
-        getFavorites={this.getFavorites}
         addFavorite={this.addFavorite}
         removeFavorite={this.removeFavorite}
         isInFavorite={this.isInFavorite}
         addHistory={this.addHistory}
       />,
       <History
+        history={this.state.history}
         snackbarOpen={this.snackbarOpen}
-        getHistory={this.getHistory}
         addHistory={this.addHistory}
       />,
       ...repoPages,
       <RepoManager
-        getRepos={this.getRepos}
+        repos={this.state.repos}
         addRepo={this.addRepo}
         removeRepo={this.removeRepo}
       />,

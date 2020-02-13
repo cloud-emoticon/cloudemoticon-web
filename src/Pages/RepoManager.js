@@ -60,7 +60,7 @@ class RepoManager extends React.Component {
       console.error(error);
       return <div>{error.message}</div>
     }
-    const currentRepoUrls = this.props.getRepos().map(repo => repo.url);
+    const currentRepoUrls = this.props.repos.map(repo => repo.url);
     return this.state.data.map((repo, i)=> {
       const { name, url } = repo;
       return (
@@ -78,7 +78,7 @@ class RepoManager extends React.Component {
   };
 
   render() {
-    const repos = this.props.getRepos();
+    const repos = this.props.repos;
     const fixedLocalRepos = repos.filter(repo => repo.fixed).map((repo, i) => {
       return (
         <ListItem key={i} disabled={true}>

@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 const Favorites = (props) => {
-  const favorites = props.getFavorites();
+  const favorites = props.favorites;
   if (!favorites || favorites.length === 0) {
     return (
       <Grid container>
