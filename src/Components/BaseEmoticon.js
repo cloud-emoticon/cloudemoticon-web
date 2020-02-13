@@ -10,6 +10,7 @@ const BaseEmoticon = props => {
     <ListItem button onClick={e => {
       e.preventDefault();
       copy(emoticon);
+      props.addHistory(emoticon);
       props.snackbarOpen(`Copied ${emoticon}`)
     }}>
       <ListItemText

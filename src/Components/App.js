@@ -2,16 +2,19 @@ import React, {Component} from 'react';
 import Favorites from './Favorites'
 import Repository from './Repository'
 import Settings from './Settings'
+import History from "./History";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Snackbar from '@material-ui/core/Snackbar';
 import ListIcon from '@material-ui/icons/List'
 import SettingsIcon from '@material-ui/icons/Settings'
 import FavoriteIcon from '@material-ui/icons/Favorite'
+import HistoryIcon from '@material-ui/icons/History'
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 
 const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
+const MaxHistoryCount = 50;
 
 class App extends Component {
   constructor(props) {
@@ -23,7 +26,8 @@ class App extends Component {
         loading: true,
         error: false
       },
-      favorites: this.getPersistFavorites(),
+      favorites: this.getPersistentFavorites(),
+      history: this.getPersistentHistory(),
       snackbar: false,
       tabIndex: 0,
     };
@@ -124,11 +128,33 @@ class App extends Component {
     this.setState({favorites});
     this.setPersistFavorites(favorites)
   };
-  getPersistFavorites = () => {
+  getPersistentFavorites = () => {
     return JSON.parse(window.localStorage.getItem('favorites')) || []
   };
   setPersistFavorites = (newFavorites) => {
     window.localStorage.setItem('favorites', JSON.stringify(newFavorites))
+  };
+  addHistory = (newEmoticon) => {
+    let history = this.getPersistentHistory();
+    history = [newEmoticon, ...history];
+    if (history.length > MaxHistoryCount) {
+      history.pop()
+    }
+    this.setState({history});
+    this.setPersistentHistory(history)
+  };
+  getHistory = () => {
+    return this.state.history
+  };
+  clearHistory = () => {
+    this.setState({history: []});
+    this.setPersistentHistory([])
+  };
+  getPersistentHistory = () => {
+    return JSON.parse(window.localStorage.getItem('history')) || []
+  };
+  setPersistentHistory = (newHistory) => {
+    window.localStorage.setItem('history', JSON.stringify(newHistory))
   };
   snackbarOpen = (text) => {
     this.setState({
@@ -157,8 +183,9 @@ class App extends Component {
             variant='fullWidth'
           >
             <Tab value={0} icon={<FavoriteIcon/>}/>
-            <Tab value={1} icon={<ListIcon/>}/>
-            <Tab value={2} icon={<SettingsIcon/>}/>
+            <Tab value={1} icon={<HistoryIcon/>}/>
+            <Tab value={2} icon={<ListIcon/>}/>
+            <Tab value={3} icon={<SettingsIcon/>}/>
           </Tabs>
         </AppBar>
         <div hidden={this.state.tabIndex !== 0}>
@@ -168,9 +195,17 @@ class App extends Component {
             addFavorite={this.addFavorite}
             removeFavorite={this.removeFavorite}
             isInFavorite={this.isInFavorite}
+            addHistory={this.addHistory}
           />
         </div>
         <div hidden={this.state.tabIndex !== 1}>
+          <History
+            snackbarOpen={this.snackbarOpen}
+            getHistory={this.getHistory}
+            addHistory={this.addHistory}
+          />
+        </div>
+        <div hidden={this.state.tabIndex !== 2}>
           <Repository
             snackbarOpen={this.snackbarOpen}
             getRepoData={this.getRepoData}
@@ -179,9 +214,10 @@ class App extends Component {
             addFavorite={this.addFavorite}
             removeFavorite={this.removeFavorite}
             isInFavorite={this.isInFavorite}
+            addHistory={this.addHistory}
           />
         </div>
-        <div hidden={this.state.tabIndex !== 2}>
+        <div hidden={this.state.tabIndex !== 3}>
           <Settings
             getRepoUrl={this.getRepoUrl}
             setRepoUrl={this.setRepoUrl}

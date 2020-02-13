@@ -22,6 +22,7 @@ class Category extends React.Component {
         <RepositoryEmoticon
             key={i}
             data={entry}
+            addHistory={this.props.addHistory}
             snackbarOpen={this.props.snackbarOpen}
             addFavorite={this.props.addFavorite}
             removeFavorite={this.props.removeFavorite}

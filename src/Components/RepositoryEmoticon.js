@@ -6,12 +6,13 @@ import IconButton from "@material-ui/core/IconButton";
 import BaseEmoticon from "./BaseEmoticon";
 
 const RepositoryEmoticon = (props) => {
-  const { snackbarOpen, data } = props;
+  const { snackbarOpen, addHistory, data } = props;
   const { emoticon, description } = data;
   const isInFavorite = props.isInFavorite(emoticon, description);
 
   return (
     <BaseEmoticon
+      addHistory={addHistory}
       snackbarOpen={snackbarOpen}
       data={data}
     >

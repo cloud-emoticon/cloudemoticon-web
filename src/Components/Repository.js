@@ -20,6 +20,7 @@ const Repository = (props) => {
         <Category
           key={i}
           data={category}
+          addHistory={props.addHistory}
           snackbarOpen={props.snackbarOpen}
           addFavorite={props.addFavorite}
           removeFavorite={props.removeFavorite}
