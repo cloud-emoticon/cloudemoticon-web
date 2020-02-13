@@ -101,6 +101,23 @@ class App extends Component {
     window.localStorage.setItem('history', JSON.stringify(newHistory))
   };
 
+  addRepo = (newRepoName, newRepoUrl) => {
+    const repos = this.getRepos();
+    repos.push({
+      url: newRepoUrl,
+      name: newRepoName
+    });
+    this.setState({ repos });
+    this.setPersistentRepos(repos)
+  };
+
+  removeRepo = (repoUrl) => {
+    let repos = this.getRepos();
+    repos = repos.filter(repo => repo.url !== repoUrl);
+    this.setState({ repos });
+    this.setPersistentRepos(repos)
+  };
+
   getRepos = () => {
     return this.state.repos.map(repo => {
       return {
@@ -173,6 +190,7 @@ class App extends Component {
   };
 
   renderTabs = () => {
+    const repoCount = this.state.repos.length;
     const repoTabs = this.state.repos.map((repo, i) => {
       return <Tab key={2 + i} value={2 + i} label={repo.name} />
     });
@@ -180,8 +198,8 @@ class App extends Component {
       (<Tab key={0} value={0} icon={<FavoriteIcon/>} />),
       (<Tab key={1} value={1} icon={<HistoryIcon/>} />),
       ...repoTabs,
-      (<Tab key={3} value={3} icon={<KitchenIcon/>} />),
-      (<Tab key={4} value={4} icon={<SettingsIcon/>} />)
+      (<Tab key={2 + repoCount} value={2 + repoCount} icon={<KitchenIcon/>} />),
+      (<Tab key={2 + repoCount + 1} value={2 + repoCount + 1} icon={<SettingsIcon/>} />)
     ]
   };
 
@@ -213,7 +231,11 @@ class App extends Component {
         addHistory={this.addHistory}
       />,
       ...repoPages,
-      <RepoManager getRepos={this.getRepos} />,
+      <RepoManager
+        getRepos={this.getRepos}
+        addRepo={this.addRepo}
+        removeRepo={this.removeRepo}
+      />,
       <Settings />
     ].map((page, i  ) => {
       return (
