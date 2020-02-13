@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
 import Button from '@material-ui/core/Button';
-import withStyles from "@material-ui/core/styles/withStyles";
-import formControlStyles from "../styles/formControl"
 
 class Settings extends Component {
   render() {
@@ -14,4 +12,4 @@ class Settings extends Component {
   }
 }
 
-export default withStyles(formControlStyles)(Settings)
+export default Settings
