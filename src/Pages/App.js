@@ -11,17 +11,24 @@ import FavoriteIcon from '@material-ui/icons/Favorite'
 import HistoryIcon from '@material-ui/icons/History'
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete"
 import AddIcon from "@material-ui/icons/Add"
 import KitchenIcon from "@material-ui/icons/Kitchen"
 import RefreshIcon from "@material-ui/icons/Refresh"
-import IconButton from "@material-ui/core/IconButton";
 import RepoManager from "./RepoManager";
+import Fab from "@material-ui/core/Fab"
+import { createStyles, withStyles } from "@material-ui/core/styles";
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
+
+const styles = theme => createStyles({
+  fab: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+});
 
 class App extends Component {
   constructor(props) {
@@ -135,40 +142,41 @@ class App extends Component {
     });
   };
 
-  renderMenuAction = () => {
+  renderFabs = () => {
+    const { classes } = this.props;
     const tabIndex = this.state.tabIndex;
     const repoCount = this.state.repos.length;
     if (tabIndex === 0) {
       return (
-        <IconButton color="inherit">
+        <Fab color="primary" className={classes.fab}>
           <AddIcon />
-        </IconButton>
+        </Fab>
       )
     }
     if (tabIndex === 1) {
       return (
-        <IconButton color="inherit" onClick={e => {
+        <Fab color="primary" className={classes.fab} onClick={e => {
           e.preventDefault();
           this.clearHistory()
         }}>
           <DeleteIcon />
-        </IconButton>
+        </Fab>
       )
     }
     if (tabIndex === 2 + repoCount) {
       return (
-        <IconButton color="inherit">
+        <Fab color="primary" className={classes.fab}>
           <AddIcon />
-        </IconButton>
+        </Fab>
       )
     }
     if (tabIndex === 2 + repoCount + 1) {
       return null;
     }
     return (
-      <IconButton color="inherit">
+      <Fab color="primary" className={classes.fab}>
         <RefreshIcon />
-      </IconButton>
+      </Fab>
     )
   };
 
@@ -234,12 +242,6 @@ class App extends Component {
       <React.Fragment>
         <CssBaseline/>
         <AppBar position='static'>
-          <Toolbar>
-            <Typography variant="h5">
-              Cloud Emoticon 2
-            </Typography>
-            {this.renderMenuAction()}
-          </Toolbar>
           <Tabs
             value={this.state.tabIndex}
             onChange={(e, newTabIndex) => {
@@ -254,6 +256,7 @@ class App extends Component {
           </Tabs>
         </AppBar>
         {this.renderPages()}
+        {this.renderFabs()}
         <Snackbar
           open={this.state.snackbar !== false}
           message={this.state.snackbar}
@@ -269,4 +272,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
