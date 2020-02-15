@@ -8,7 +8,7 @@ import BaseEmoticon from "./BaseEmoticon";
 const RepositoryEmoticon = (props) => {
   const { snackbarOpen, addHistory, data } = props;
   const { emoticon, description } = data;
-  const isInFavorite = props.isInFavorite(emoticon, description);
+  const isInFavorite = props.isInFavorite(emoticon);
 
   return (
     <BaseEmoticon
@@ -22,7 +22,7 @@ const RepositoryEmoticon = (props) => {
             <FavoriteIcon
               onClick={e => {
                 e.stopPropagation();
-                props.removeFavorite(emoticon, description);
+                props.removeFavorite(emoticon);
                 props.snackbarOpen(`Removed ${emoticon} from favorites`)
               }}
             /> :

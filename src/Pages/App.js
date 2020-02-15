@@ -51,14 +51,8 @@ class App extends Component {
     this.setPersistentFavorites(favorites)
   };
 
-  _findFavoriteIndex = (targetEmoticon, targetDescription) => {
-    return this.state.favorites.findIndex(({emoticon, description}) => {
-      return targetEmoticon === emoticon && targetDescription === description
-    })
-  };
-
-  removeFavorite = (emoticon, description) => {
-    const i = this._findFavoriteIndex(emoticon, description);
+  removeFavorite = (emoticon) => {
+    const i = this.state.favorites.map(f => f.emoticon).indexOf(emoticon);
     if (i !== -1) {
       const favorites = this.state.favorites;
       favorites.splice(i, 1);
@@ -67,8 +61,8 @@ class App extends Component {
     }
   };
 
-  isInFavorite = (emoticon, description) => {
-    return this._findFavoriteIndex(emoticon, description) !== -1
+  isInFavorite = (emoticon) => {
+    return this.state.favorites.map(f => f.emoticon).indexOf(emoticon) !== -1
   };
 
   getPersistentFavorites = () => {
@@ -281,8 +275,7 @@ class App extends Component {
           primaryLabel='Emoticon'
           secondaryLabel='Description'
           onValidate={emoticon => {
-            const existingEmoticons = this.state.favorites.map(f => f.emoticon).filter(e => e === emoticon);
-            if (existingEmoticons && existingEmoticons.length > 0) {
+            if (this.isInFavorite(emoticon)) {
               return 'This emoticon already exists'
             } else {
               return false
