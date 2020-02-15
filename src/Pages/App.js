@@ -17,6 +17,7 @@ import KitchenIcon from "@material-ui/icons/Kitchen"
 import RefreshIcon from "@material-ui/icons/Refresh"
 import RepoManager from "./RepoManager";
 import Fab from "@material-ui/core/Fab"
+import DualTextDialog from "../Components/DualTextDialog";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
@@ -39,6 +40,7 @@ class App extends Component {
       repos: this.getPersistentRepos(),
       snackbar: false,
       tabIndex: 0,
+      newFavoriteDialogOpen: false
     };
   }
 
@@ -148,7 +150,12 @@ class App extends Component {
 
     const fabs = [
       (
-        <Fab color="primary" className={classes.fab}>
+        <Fab color="primary" className={classes.fab} onClick={e => {
+          e.preventDefault();
+          this.setState({
+            newFavoriteDialogOpen: true
+          })
+        }}>
           <AddIcon />
         </Fab>
       ),
@@ -263,6 +270,28 @@ class App extends Component {
         </AppBar>
         {this.renderPages()}
         {this.renderFabs()}
+        <DualTextDialog
+          open={this.state.newFavoriteDialogOpen}
+          onClose={() => {
+            this.setState({
+              newFavoriteDialogOpen: false
+            })
+          }}
+          title='Add favorite'
+          primaryLabel='Emoticon'
+          secondaryLabel='Description'
+          onValidate={emoticon => {
+            const existingEmoticons = this.state.favorites.map(f => f.emoticon).filter(e => e === emoticon);
+            if (existingEmoticons && existingEmoticons.length > 0) {
+              return 'This emoticon already exists'
+            } else {
+              return false
+            }
+          }}
+          onConfirm={(emoticon, description) => {
+            this.addFavorite(emoticon, description)
+          }}
+        />
         <Snackbar
           open={this.state.snackbar !== false}
           message={this.state.snackbar}
