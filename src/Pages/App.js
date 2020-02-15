@@ -52,13 +52,10 @@ class App extends Component {
   };
 
   removeFavorite = (emoticon) => {
-    const i = this.state.favorites.map(f => f.emoticon).indexOf(emoticon);
-    if (i !== -1) {
-      const favorites = this.state.favorites;
-      favorites.splice(i, 1);
-      this.setState({favorites});
-      this.setPersistentFavorites(favorites)
-    }
+    let favorites = this.state.favorites;
+    favorites = favorites.filter(favorite => favorite.emoticon !== emoticon);
+    this.setState({ favorites });
+    this.setPersistentFavorites(favorites)
   };
 
   isInFavorite = (emoticon) => {
