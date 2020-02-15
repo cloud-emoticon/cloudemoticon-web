@@ -40,7 +40,8 @@ class App extends Component {
       repos: this.getPersistentRepos(),
       snackbar: false,
       tabIndex: 0,
-      newFavoriteDialogOpen: false
+      newFavoriteDialogOpen: false,
+      newRepoDialogOpen: false
     };
   }
 
@@ -110,6 +111,10 @@ class App extends Component {
     this.setPersistentRepos(repos)
   };
 
+  isInRepos = (repoUrl) => {
+    return this.state.repos.map(repo => repo.url).indexOf(repoUrl) !== -1
+  };
+
   getPersistentRepos = () => {
     return JSON.parse(window.localStorage.getItem('repos')) || [
       {
@@ -166,7 +171,12 @@ class App extends Component {
         )
       }),
       (
-        <Fab color="primary" className={classes.fab}>
+        <Fab color="primary" className={classes.fab} onClick={e => {
+          e.preventDefault();
+          this.setState({
+            newRepoDialogOpen: true
+          })
+        }}>
           <AddIcon />
         </Fab>
       ),
@@ -230,6 +240,7 @@ class App extends Component {
         repos={this.state.repos}
         addRepo={this.addRepo}
         removeRepo={this.removeRepo}
+        isInRepos={this.isInRepos}
       />,
       <Settings />
     ].map((page, i  ) => {
@@ -280,6 +291,27 @@ class App extends Component {
           }}
           onConfirm={(emoticon, description) => {
             this.addFavorite(emoticon, description)
+          }}
+        />
+        <DualTextDialog
+          open={this.state.newRepoDialogOpen}
+          onClose={() => {
+            this.setState({
+              newRepoDialogOpen: false
+            })
+          }}
+          title='Add repo'
+          primaryLabel='URL'
+          secondaryLabel='Alias'
+          onValidate={url => {
+            if (this.isInRepos(url)) {
+              return 'This URL already exists'
+            } else {
+              return false
+            }
+          }}
+          onConfirm={(url, alias) => {
+            this.addRepo(alias, url)
           }}
         />
         <Snackbar

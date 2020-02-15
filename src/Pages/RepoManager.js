@@ -60,11 +60,10 @@ class RepoManager extends React.Component {
       console.error(error);
       return <div>{error.message}</div>
     }
-    const currentRepoUrls = this.props.repos.map(repo => repo.url);
     return this.state.data.map((repo, i)=> {
       const { name, url } = repo;
       return (
-        <ListItem key={i} button disabled={currentRepoUrls.indexOf(url) !== -1} onClick={e => {
+        <ListItem key={i} button disabled={this.props.isInRepos(url)} onClick={e => {
           e.preventDefault();
           this.props.addRepo(name, url)
         }}>
