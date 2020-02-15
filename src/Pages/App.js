@@ -145,53 +145,59 @@ class App extends Component {
   renderFabs = () => {
     const { classes } = this.props;
     const tabIndex = this.state.tabIndex;
-    const repoCount = this.state.repos.length;
-    if (tabIndex === 0) {
-      return (
+
+    const fabs = [
+      (
         <Fab color="primary" className={classes.fab}>
           <AddIcon />
         </Fab>
-      )
-    }
-    if (tabIndex === 1) {
-      return (
+      ),
+      (
         <Fab color="primary" className={classes.fab} onClick={e => {
           e.preventDefault();
           this.clearHistory()
         }}>
           <DeleteIcon />
         </Fab>
-      )
-    }
-    if (tabIndex === 2 + repoCount) {
-      return (
+      ),
+      ...this.state.repos.map(() => {
+        return (
+          <Fab color="primary" className={classes.fab}>
+            <RefreshIcon />
+          </Fab>
+        )
+      }),
+      (
         <Fab color="primary" className={classes.fab}>
           <AddIcon />
         </Fab>
-      )
-    }
-    if (tabIndex === 2 + repoCount + 1) {
-      return null;
-    }
-    return (
-      <Fab color="primary" className={classes.fab}>
-        <RefreshIcon />
-      </Fab>
-    )
+      ),
+      null
+    ];
+
+    return fabs[tabIndex];
   };
 
   renderTabs = () => {
-    const repoCount = this.state.repos.length;
-    const repoTabs = this.state.repos.map((repo, i) => {
-      return <Tab key={2 + i} value={2 + i} label={repo.name} />
+    const repoTabConfigs = this.state.repos.map(repo => {
+      return { label: repo.name }
     });
-    return [
-      (<Tab key={0} value={0} icon={<FavoriteIcon/>} />),
-      (<Tab key={1} value={1} icon={<HistoryIcon/>} />),
-      ...repoTabs,
-      (<Tab key={2 + repoCount} value={2 + repoCount} icon={<KitchenIcon/>} />),
-      (<Tab key={2 + repoCount + 1} value={2 + repoCount + 1} icon={<SettingsIcon/>} />)
-    ]
+    const tabConfigs = [
+      { icon: (<FavoriteIcon/>) },
+      { icon: (<HistoryIcon/>) },
+      ...repoTabConfigs,
+      { icon: (<KitchenIcon/>) },
+      { icon: (<SettingsIcon/>) },
+    ];
+    return tabConfigs.map((tabConfig, i) => {
+      return (
+        <Tab
+          key={i}
+          value={i}
+          {...tabConfig}
+        />
+      )
+    });
   };
 
   renderPages = () => {
