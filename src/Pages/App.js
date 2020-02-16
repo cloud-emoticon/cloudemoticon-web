@@ -163,13 +163,11 @@ class App extends Component {
       url: newRepoUrl,
       name: newRepoName
     };
+    const newRepos = [...repos, newRepo];
     this.setState({
-      repos: [
-        ...repos,
-        newRepo
-      ],
+      repos: newRepos,
       cachedRepos: [
-        ...this.state.cachedRepos,
+        ...repos,
         {
           loading: true,
           error: undefined,
@@ -177,12 +175,14 @@ class App extends Component {
         }
       ]
     });
-    this.setPersistentRepos(repos);
+    this.setPersistentRepos(newRepos);
     this.fetchRepo(newRepo, repos.length);
   };
 
   removeRepo = (repoUrl) => {
     let repos = this.state.repos;
+    const newRepos = repos.filter(repo => repo.url !== repoUrl);
+
     const cachedRepos = this.state.cachedRepos;
     const indices = repos.map((repo, i) => {
       return repo.url === repoUrl ? i : -1
@@ -194,10 +194,10 @@ class App extends Component {
     }
 
     this.setState({
-      repos: repos.filter(repo => repo.url !== repoUrl),
+      repos: newRepos,
       cachedRepos: cachedRepos
     });
-    this.setPersistentRepos(repos)
+    this.setPersistentRepos(newRepos)
   };
 
   isInRepos = (repoUrl) => {
