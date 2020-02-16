@@ -226,9 +226,12 @@ class App extends Component {
           <DeleteIcon />
         </Fab>
       ),
-      ...this.state.repos.map(() => {
+      ...this.state.repos.map((repo, index) => {
         return (
-          <Fab color="primary" className={classes.fab}>
+          <Fab color="primary" className={classes.fab} onClick={e => {
+            e.preventDefault();
+            this.fetchRepo(repo, index)
+          }}>
             <RefreshIcon />
           </Fab>
         )
