@@ -35,13 +35,12 @@ const styles = theme => createStyles({
 class App extends Component {
   constructor(props) {
     super(props);
-    const repos = this.getPersistentRepos();
     this.state = {
       favorites: this.getPersistentFavorites(),
       history: this.getPersistentHistory(),
-      repos: repos,
-      cachedRepos: repos.map(repo => {
+      repos: this.getPersistentRepos().map(repo => {
         return {
+          ...repo,
           loading: true,
           error: undefined,
           data: undefined
@@ -56,11 +55,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.state.repos.forEach(this.fetchRepo)
+    this.state.repos.forEach((_, index) => {
+      this.fetchRepo(index)
+    })
   }
 
-  async fetchRepo(repo, index) {
-    this.setCachedRepoLoading(index, true);
+  async fetchRepo(index) {
+    this.setRepoStateLoading(index, true);
+    const repo = this.state.repos[index];
     const url = repo.url;
     try {
       const response = await fetch(url, {cache: 'no-cache'});
@@ -76,21 +78,21 @@ class App extends Component {
       } else {
         throw new Error(`Unknown repo type ${url}`)
       }
-      this.setCachedRepo(index, false, undefined, repo)
+      this.setStateRepo(index, false, undefined, repo)
     } catch (e) {
-      this.setCachedRepo(index, false, e, undefined)
+      this.setStateRepo(index, false, e, undefined)
     } finally {
-      this.setCachedRepoLoading(index, false)
+      this.setRepoStateLoading(index, false)
     }
   }
 
-  setCachedRepoLoading = (index, loading) => {
+  setRepoStateLoading = (index, loading) => {
     this.setState({
-      cachedRepos: Object.assign(
+      repos: Object.assign(
         [],
-        this.state.cachedRepos,
+        this.state.repos,
         { [index]: {
-            ...this.state.cachedRepos[index],
+            ...this.state.repos[index],
             loading
           }
         }
@@ -98,12 +100,16 @@ class App extends Component {
     })
   };
 
-  setCachedRepo = (index, loading, error, data) => {
+  setStateRepo = (index, loading, error, data) => {
     this.setState({
-      cachedRepos: Object.assign(
+      repos: Object.assign(
         [],
-        this.state.cachedRepos,
-        { [index]: { loading, error, data } }
+        this.state.repos,
+        { [index]: {
+            ...this.state.repos[index],
+            loading, error, data
+          }
+        }
       )
     })
   };
@@ -158,46 +164,30 @@ class App extends Component {
   };
 
   addRepo = (newRepoName, newRepoUrl) => {
-    const repos = this.state.repos;
-    const newRepo = {
-      url: newRepoUrl,
-      name: newRepoName
-    };
-    const newRepos = [...repos, newRepo];
-    this.setState({
-      repos: newRepos,
-      cachedRepos: [
-        ...repos,
-        {
-          loading: true,
-          error: undefined,
-          data: undefined
-        }
-      ]
+    const oldReposLength = this.state.repos.length;
+    const repos = [
+      ...this.state.repos,
+      {
+        url: newRepoUrl,
+        name: newRepoName,
+        loading: true,
+        error: undefined,
+        data: undefined
+      }
+    ];
+    this.setState({ repos }, () => {
+      // only fetch repo after the new repo item is added to state
+      this.fetchRepo(oldReposLength)
     });
-    this.setPersistentRepos(newRepos);
-    this.fetchRepo(newRepo, repos.length);
+    this.setPersistentRepos(repos);
   };
 
   removeRepo = (repoUrl) => {
-    let repos = this.state.repos;
-    const newRepos = repos.filter(repo => repo.url !== repoUrl);
-
-    const cachedRepos = this.state.cachedRepos;
-    const indices = repos.map((repo, i) => {
-      return repo.url === repoUrl ? i : -1
-    }).filter(index => {
-      return index !== -1
+    const repos = this.state.repos.filter(repo => {
+      return repo.url !== repoUrl
     });
-    for (let i in indices) {
-      cachedRepos.splice(i, 1)
-    }
-
-    this.setState({
-      repos: newRepos,
-      cachedRepos: cachedRepos
-    });
-    this.setPersistentRepos(newRepos)
+    this.setState({ repos });
+    this.setPersistentRepos(repos)
   };
 
   isInRepos = (repoUrl) => {
@@ -214,7 +204,13 @@ class App extends Component {
   };
 
   setPersistentRepos = newRepos => {
-    window.localStorage.setItem('repos', JSON.stringify(newRepos))
+    const toBePersisted = newRepos.map(repo => {
+      return {
+        "name": repo.name,
+        "url": repo.url
+      }
+    });
+    window.localStorage.setItem('repos', JSON.stringify(toBePersisted))
   };
 
   snackbarOpen = (text) => {
@@ -252,11 +248,11 @@ class App extends Component {
           <DeleteIcon />
         </Fab>
       ),
-      ...this.state.repos.map((repo, index) => {
+      ...this.state.repos.map((_, index) => {
         return (
           <Fab color="primary" className={classes.fab} onClick={e => {
             e.preventDefault();
-            this.fetchRepo(repo, index)
+            this.fetchRepo(index)
           }}>
             <RefreshIcon />
           </Fab>
@@ -304,9 +300,9 @@ class App extends Component {
     const repoPages = this.state.repos.map((repo, index) => {
       return (
         <Repository
-          loading={this.state.cachedRepos[index].loading}
-          error={this.state.cachedRepos[index].error}
-          data={this.state.cachedRepos[index].data}
+          loading={this.state.repos[index].loading}
+          error={this.state.repos[index].error}
+          data={this.state.repos[index].data}
           snackbarOpen={this.snackbarOpen}
           addFavorite={this.addFavorite}
           removeFavorite={this.removeFavorite}
