@@ -17,23 +17,17 @@ const RepositoryEmoticon = (props) => {
       data={data}
     >
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete">
-          {isInFavorite ?
-            <FavoriteIcon
-              onClick={e => {
-                e.stopPropagation();
-                props.removeFavorite(emoticon);
-                props.snackbarOpen(`Removed ${emoticon} from favorites`)
-              }}
-            /> :
-            <NoFavoriteIcon
-              onClick={e => {
-                e.stopPropagation();
-                props.addFavorite(emoticon, description);
-                props.snackbarOpen(`Added ${emoticon} to favorites`)
-              }}
-            />
+        <IconButton edge="end" aria-label="delete" onClick={e => {
+          e.preventDefault();
+          if (isInFavorite) {
+            props.removeFavorite(emoticon);
+            props.snackbarOpen(`Removed ${emoticon} from favorites`)
+          } else {
+            props.addFavorite(emoticon, description);
+            props.snackbarOpen(`Added ${emoticon} to favorites`)
           }
+        }}>
+          {isInFavorite ? <FavoriteIcon /> : <NoFavoriteIcon />}
         </IconButton>
       </ListItemSecondaryAction>
     </BaseEmoticon>
