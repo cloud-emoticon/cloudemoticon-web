@@ -63,7 +63,7 @@ class App extends Component {
     this.setCachedRepoLoading(index, true);
     const url = repo.url;
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {cache: 'no-cache'});
       if (!response.ok) {
         throw new Error(`Unable to download ${url}`)
       }
