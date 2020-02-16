@@ -86,7 +86,7 @@ class App extends Component {
 
   setCachedRepoLoading = (index, loading) => {
     this.setState({
-      cacheRepos: Object.assign(
+      cachedRepos: Object.assign(
         [],
         this.state.cachedRepos,
         { [index]: {
@@ -159,18 +159,44 @@ class App extends Component {
 
   addRepo = (newRepoName, newRepoUrl) => {
     const repos = this.state.repos;
-    repos.push({
+    const newRepo = {
       url: newRepoUrl,
       name: newRepoName
+    };
+    this.setState({
+      repos: [
+        ...repos,
+        newRepo
+      ],
+      cachedRepos: [
+        ...this.state.cachedRepos,
+        {
+          loading: true,
+          error: undefined,
+          data: undefined
+        }
+      ]
     });
-    this.setState({ repos });
-    this.setPersistentRepos(repos)
+    this.setPersistentRepos(repos);
+    this.fetchRepo(newRepo, repos.length);
   };
 
   removeRepo = (repoUrl) => {
     let repos = this.state.repos;
-    repos = repos.filter(repo => repo.url !== repoUrl);
-    this.setState({ repos });
+    const cachedRepos = this.state.cachedRepos;
+    const indices = repos.map((repo, i) => {
+      return repo.url === repoUrl ? i : -1
+    }).filter(index => {
+      return index !== -1
+    });
+    for (let i in indices) {
+      cachedRepos.splice(i, 1)
+    }
+
+    this.setState({
+      repos: repos.filter(repo => repo.url !== repoUrl),
+      cachedRepos: cachedRepos
+    });
     this.setPersistentRepos(repos)
   };
 
