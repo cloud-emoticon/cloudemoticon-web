@@ -19,6 +19,7 @@ import RepoManager from "./RepoManager";
 import Fab from "@material-ui/core/Fab"
 import DualTextDialog from "../Components/DualTextDialog";
 import { createStyles, withStyles } from "@material-ui/core/styles";
+import xmlToJsonRepo from "../utils/xmlToJsonRepo";
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
@@ -34,16 +35,78 @@ const styles = theme => createStyles({
 class App extends Component {
   constructor(props) {
     super(props);
+    const repos = this.getPersistentRepos();
     this.state = {
       favorites: this.getPersistentFavorites(),
       history: this.getPersistentHistory(),
-      repos: this.getPersistentRepos(),
+      repos: repos,
+      cachedRepos: repos.map(repo => {
+        return {
+          loading: true,
+          error: undefined,
+          data: undefined
+        }
+      }),
       snackbar: false,
       tabIndex: 0,
       newFavoriteDialogOpen: false,
       newRepoDialogOpen: false
     };
+    this.fetchRepo = this.fetchRepo.bind(this)
   }
+
+  componentDidMount() {
+    this.state.repos.forEach(this.fetchRepo)
+  }
+
+  async fetchRepo(repo, index) {
+    this.setCachedRepoLoading(index, true);
+    const url = repo.url;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Unable to download ${url}`)
+      }
+      const text = await response.text();
+      let repo;
+      if (url.endsWith('.json')) {
+        repo = JSON.parse(text)
+      } else if (url.endsWith('.xml')) {
+        repo = await xmlToJsonRepo(text);
+      } else {
+        throw new Error(`Unknown repo type ${url}`)
+      }
+      this.setCachedRepo(index, false, undefined, repo)
+    } catch (e) {
+      this.setCachedRepo(index, false, e, undefined)
+    } finally {
+      this.setCachedRepoLoading(index, false)
+    }
+  }
+
+  setCachedRepoLoading = (index, loading) => {
+    this.setState({
+      cacheRepos: Object.assign(
+        [],
+        this.state.cachedRepos,
+        { [index]: {
+            ...this.state.cachedRepos[index],
+            loading
+          }
+        }
+      )
+    })
+  };
+
+  setCachedRepo = (index, loading, error, data) => {
+    this.setState({
+      cachedRepos: Object.assign(
+        [],
+        this.state.cachedRepos,
+        { [index]: { loading, error, data } }
+      )
+    })
+  };
 
   addFavorite = (emoticon, description) => {
     const favorites = this.state.favorites;
@@ -209,10 +272,12 @@ class App extends Component {
   };
 
   renderPages = () => {
-    const repoPages = this.state.repos.map(repo => {
+    const repoPages = this.state.repos.map((repo, index) => {
       return (
         <Repository
-          url={repo.url}
+          loading={this.state.cachedRepos[index].loading}
+          error={this.state.cachedRepos[index].error}
+          data={this.state.cachedRepos[index].data}
           snackbarOpen={this.snackbarOpen}
           addFavorite={this.addFavorite}
           removeFavorite={this.removeFavorite}
