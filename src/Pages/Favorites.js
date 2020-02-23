@@ -22,7 +22,7 @@ const Favorites = (props) => {
         key={i}
         data={item}
         addHistory={props.addHistory}
-        snackbarOpen={props.snackbarOpen}
+        openSnackbar={props.openSnackbar}
         addFavorite={props.addFavorite}
         removeFavorite={props.removeFavorite}
         isInFavorite={props.isInFavorite}

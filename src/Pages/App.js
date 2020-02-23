@@ -20,16 +20,23 @@ import Fab from "@material-ui/core/Fab"
 import DualTextDialog from "../Components/DualTextDialog";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 import xmlToJsonRepo from "../utils/xmlToJsonRepo";
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
 
 const styles = theme => createStyles({
-  fab: {
+  primaryFab: {
     position: 'fixed',
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
+  secondaryFab: {
+    position: 'fixed',
+    bottom: theme.spacing(11),
+    right: theme.spacing(3),
+  }
 });
 
 class App extends Component {
@@ -43,7 +50,7 @@ class App extends Component {
           ...repo,
           loading: true,
           error: undefined,
-          data: undefined
+          data: undefined,
         }
       }),
       snackbar: false,
@@ -107,7 +114,16 @@ class App extends Component {
         this.state.repos,
         { [index]: {
             ...this.state.repos[index],
-            loading, error, data
+            loading, error,
+            data: {
+              ...data,
+              categories: data.categories.map(cat => {
+                return {
+                  ...cat,
+                  _open: true
+                }
+              })
+            }
           }
         }
       )
@@ -213,13 +229,71 @@ class App extends Component {
     window.localStorage.setItem('repos', JSON.stringify(toBePersisted))
   };
 
-  snackbarOpen = (text) => {
+  toggleRepoCategory = (repoIndex, categoryIndex) => {
+    this.setState({
+      repos: Object.assign(
+        [],
+        this.state.repos,
+        {
+          [repoIndex]: {
+            ...this.state.repos[repoIndex],
+            data: {
+              ...this.state.repos[repoIndex].data,
+              categories: Object.assign(
+                [],
+                this.state.repos[repoIndex].data.categories,
+                {
+                  [categoryIndex]: {
+                    ...this.state.repos[repoIndex].data.categories[categoryIndex],
+                    _open: !this.state.repos[repoIndex].data.categories[categoryIndex]._open
+                  }
+                }
+              )
+            }
+          }
+        }
+      )
+    })
+  };
+
+  setAllCategoriesOfRepoOpenOrClose = (repoIndex, open) => {
+    this.setState({
+      repos: Object.assign(
+        [],
+        this.state.repos,
+        {
+          [repoIndex]: {
+            ...this.state.repos[repoIndex],
+            data: {
+              ...this.state.repos[repoIndex].data,
+              categories: this.state.repos[repoIndex].data.categories.map(category => {
+                return {
+                  ...category,
+                  _open: open
+                }
+              })
+            }
+          }
+        }
+      )
+    })
+  };
+
+  isAnyCategoryOfRepoOpen = repoIndex => {
+    return this.state.repos[repoIndex].data.categories
+      .map(category => category._open)
+      .reduce((acc, cur) => {
+        return acc || cur
+      }, false)
+  };
+
+  openSnackbar = (text) => {
     this.setState({
       snackbar: text,
     });
   };
 
-  snackbarClose = () => {
+  closeSnackbar = () => {
     this.setState({
       snackbar: false,
     });
@@ -231,7 +305,7 @@ class App extends Component {
 
     const fabs = [
       (
-        <Fab color="primary" className={classes.fab} onClick={e => {
+        <Fab color="secondary" className={classes.primaryFab} onClick={e => {
           e.preventDefault();
           this.setState({
             newFavoriteDialogOpen: true
@@ -241,7 +315,7 @@ class App extends Component {
         </Fab>
       ),
       (
-        <Fab color="primary" className={classes.fab} onClick={e => {
+        <Fab color="secondary" className={classes.primaryFab} onClick={e => {
           e.preventDefault();
           this.clearHistory()
         }}>
@@ -250,16 +324,38 @@ class App extends Component {
       ),
       ...this.state.repos.map((_, index) => {
         return (
-          <Fab color="primary" className={classes.fab} onClick={e => {
-            e.preventDefault();
-            this.fetchRepo(index)
-          }}>
-            <RefreshIcon />
-          </Fab>
+          <React.Fragment>
+            <Fab color="secondary" className={classes.primaryFab} onClick={e => {
+              e.preventDefault();
+              this.fetchRepo(index)
+            }}>
+              <RefreshIcon />
+            </Fab>
+            {!this.state.repos[index].loading ?
+              this.isAnyCategoryOfRepoOpen(index) ?
+                (
+                  <Fab color="primary" size="small" className={classes.secondaryFab} onClick={e => {
+                    e.preventDefault();
+                    this.setAllCategoriesOfRepoOpenOrClose(index, false);
+                  }}>
+                    <ExpandLessIcon />
+                  </Fab>
+                ) :
+                (
+                  <Fab color="primary" size="small" className={classes.secondaryFab} onClick={e => {
+                    e.preventDefault();
+                    this.setAllCategoriesOfRepoOpenOrClose(index, true);
+                  }}>
+                    <ExpandMoreIcon />
+                  </Fab>
+                ) :
+              null
+            }
+          </React.Fragment>
         )
       }),
       (
-        <Fab color="primary" className={classes.fab} onClick={e => {
+        <Fab color="secondary" className={classes.primaryFab} onClick={e => {
           e.preventDefault();
           this.setState({
             newRepoDialogOpen: true
@@ -297,24 +393,27 @@ class App extends Component {
   };
 
   renderPages = () => {
-    const repoPages = this.state.repos.map((repo, index) => {
+    const repoPages = this.state.repos.map((_, index) => {
       return (
         <Repository
           loading={this.state.repos[index].loading}
           error={this.state.repos[index].error}
           data={this.state.repos[index].data}
-          snackbarOpen={this.snackbarOpen}
+          openSnackbar={this.openSnackbar}
           addFavorite={this.addFavorite}
           removeFavorite={this.removeFavorite}
           isInFavorite={this.isInFavorite}
           addHistory={this.addHistory}
+          onRepoToggle={categoryIndex => {
+            this.toggleRepoCategory(index, categoryIndex)
+          }}
         />
       )
     });
     return [
       <Favorites
         favorites={this.state.favorites}
-        snackbarOpen={this.snackbarOpen}
+        openSnackbar={this.openSnackbar}
         addFavorite={this.addFavorite}
         removeFavorite={this.removeFavorite}
         isInFavorite={this.isInFavorite}
@@ -322,7 +421,7 @@ class App extends Component {
       />,
       <History
         history={this.state.history}
-        snackbarOpen={this.snackbarOpen}
+        openSnackbar={this.openSnackbar}
         addHistory={this.addHistory}
       />,
       ...repoPages,
@@ -408,7 +507,7 @@ class App extends Component {
           open={this.state.snackbar !== false}
           message={this.state.snackbar}
           autoHideDuration={2000}
-          onClose={this.snackbarClose}
+          onClose={this.closeSnackbar}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',

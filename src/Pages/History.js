@@ -25,7 +25,7 @@ const History = (props) => {
           description: null
         }}
         addHistory={props.addHistory}
-        snackbarOpen={props.snackbarOpen}
+        openSnackbar={props.openSnackbar}
       />
     )
   });

@@ -28,16 +28,19 @@ const Repository = props => {
     );
   }
   const data = props.data;
-  const categoryItems = data['categories'].map((category, i) => {
+  const categoryItems = data.categories.map((category, i) => {
     return (
       <Category
         key={i}
         data={category}
         addHistory={props.addHistory}
-        snackbarOpen={props.snackbarOpen}
+        openSnackbar={props.openSnackbar}
         addFavorite={props.addFavorite}
         removeFavorite={props.removeFavorite}
         isInFavorite={props.isInFavorite}
+        onToggle={() => {
+          props.onRepoToggle(i)
+        }}
       />
     )
   });

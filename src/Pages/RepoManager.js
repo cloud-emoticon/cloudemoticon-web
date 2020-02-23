@@ -62,7 +62,6 @@ class RepoManager extends React.Component {
     }
     const error = this.state.error;
     if (error) {
-      console.error(error);
       return <div>{error.message}</div>
     }
     return this.state.data.map((repo, i)=> {
