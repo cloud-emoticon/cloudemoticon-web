@@ -5,6 +5,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import SettingsHeader from "../Components/SettingsHeader";
 import SettingsDivider from "../Components/SettingsDivider";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import EmptyView from "../Components/EmptyView";
 
 const RemoteReposIndexUrl = "https://cloud-emoticon-store-bridge.herokuapp.com/json";
 
@@ -50,10 +51,14 @@ class RepoManager extends React.Component {
 
   renderAvailableRepos = () => {
     if (this.state.loading) {
-      return <CircularProgress
-        size={80}
-        thickness={5}
-      />
+      return (
+        <EmptyView>
+          <CircularProgress
+            size={80}
+            thickness={5}
+          />
+        </EmptyView>
+      )
     }
     const error = this.state.error;
     if (error) {
