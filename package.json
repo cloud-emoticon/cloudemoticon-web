@@ -13,6 +13,7 @@
     "copy-to-clipboard": "^3.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-swipeable-views": "^0.13.9",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {

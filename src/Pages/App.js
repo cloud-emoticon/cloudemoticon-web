@@ -22,6 +22,7 @@ import { createStyles, withStyles } from "@material-ui/core/styles";
 import xmlToJsonRepo from "../utils/xmlToJsonRepo";
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SwipeableViews from 'react-swipeable-views';
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
@@ -410,7 +411,7 @@ class App extends Component {
         />
       )
     });
-    return [
+    const pages = [
       <Favorites
         favorites={this.state.favorites}
         openSnackbar={this.openSnackbar}
@@ -434,11 +435,23 @@ class App extends Component {
       <Settings />
     ].map((page, i  ) => {
       return (
-        <div key={i} hidden={this.state.tabIndex !== i}>
+        <div key={i}>
           {page}
         </div>
       )
-    })
+    });
+    return (
+      <SwipeableViews
+        index={this.state.tabIndex}
+        onChangeIndex={newIndex => {
+          this.setState({
+            tabIndex: newIndex
+          })
+        }}
+      >
+        {pages}
+      </SwipeableViews>
+    )
   };
 
   render() {
