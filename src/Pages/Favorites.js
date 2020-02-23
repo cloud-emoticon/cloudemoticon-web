@@ -26,6 +26,7 @@ const Favorites = (props) => {
         addFavorite={props.addFavorite}
         removeFavorite={props.removeFavorite}
         isInFavorite={props.isInFavorite}
+        isEditing={props.isEditing}
       />
     )
   });

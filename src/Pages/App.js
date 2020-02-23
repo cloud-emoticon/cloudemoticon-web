@@ -443,6 +443,7 @@ class App extends Component {
         removeFavorite={this.removeFavorite}
         isInFavorite={this.isInFavorite}
         addHistory={this.addHistory}
+        isEditing={this.state.editingFavorites}
       />,
       <History
         history={this.state.history}
