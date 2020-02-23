@@ -21,6 +21,7 @@ import DualTextDialog from "../Components/DualTextDialog";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 import xmlToJsonRepo from "../utils/xmlToJsonRepo";
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
@@ -228,30 +229,62 @@ class App extends Component {
     window.localStorage.setItem('repos', JSON.stringify(toBePersisted))
   };
 
-  toggleRepoCategory = (repoUrl, categoryIndex) => {
+  toggleRepoCategory = (repoIndex, categoryIndex) => {
     this.setState({
-      repos: this.state.repos.map(repo => {
-        if (repo.url !== repoUrl) {
-          return repo
-        }
-        return {
-          ...repo,
-          data: {
-            ...repo.data,
-            categories: Object.assign(
-              [],
-              repo.data.categories,
-              {
-                [categoryIndex]: {
-                  ...repo.data.categories[categoryIndex],
-                  _open: !repo.data.categories[categoryIndex]._open
+      repos: Object.assign(
+        [],
+        this.state.repos,
+        {
+          [repoIndex]: {
+            ...this.state.repos[repoIndex],
+            data: {
+              ...this.state.repos[repoIndex].data,
+              categories: Object.assign(
+                [],
+                this.state.repos[repoIndex].data.categories,
+                {
+                  [categoryIndex]: {
+                    ...this.state.repos[repoIndex].data.categories[categoryIndex],
+                    _open: !this.state.repos[repoIndex].data.categories[categoryIndex]._open
+                  }
                 }
-              }
-            )
+              )
+            }
           }
         }
-      })
+      )
     })
+  };
+
+  setAllCategoriesOfRepoOpenOrClose = (repoIndex, open) => {
+    this.setState({
+      repos: Object.assign(
+        [],
+        this.state.repos,
+        {
+          [repoIndex]: {
+            ...this.state.repos[repoIndex],
+            data: {
+              ...this.state.repos[repoIndex].data,
+              categories: this.state.repos[repoIndex].data.categories.map(category => {
+                return {
+                  ...category,
+                  _open: open
+                }
+              })
+            }
+          }
+        }
+      )
+    })
+  };
+
+  isAnyCategoryOfRepoOpen = repoIndex => {
+    return this.state.repos[repoIndex].data.categories
+      .map(category => category._open)
+      .reduce((acc, cur) => {
+        return acc || cur
+      }, false)
   };
 
   openSnackbar = (text) => {
@@ -298,9 +331,26 @@ class App extends Component {
             }}>
               <RefreshIcon />
             </Fab>
-            <Fab color="primary" size="small" className={classes.secondaryFab}>
-              <ExpandLessIcon />
-            </Fab>
+            {!this.state.repos[index].loading ?
+              this.isAnyCategoryOfRepoOpen(index) ?
+                (
+                  <Fab color="primary" size="small" className={classes.secondaryFab} onClick={e => {
+                    e.preventDefault();
+                    this.setAllCategoriesOfRepoOpenOrClose(index, false);
+                  }}>
+                    <ExpandLessIcon />
+                  </Fab>
+                ) :
+                (
+                  <Fab color="primary" size="small" className={classes.secondaryFab} onClick={e => {
+                    e.preventDefault();
+                    this.setAllCategoriesOfRepoOpenOrClose(index, true);
+                  }}>
+                    <ExpandMoreIcon />
+                  </Fab>
+                ) :
+              null
+            }
           </React.Fragment>
         )
       }),
@@ -343,7 +393,7 @@ class App extends Component {
   };
 
   renderPages = () => {
-    const repoPages = this.state.repos.map((repo, index) => {
+    const repoPages = this.state.repos.map((_, index) => {
       return (
         <Repository
           loading={this.state.repos[index].loading}
@@ -355,7 +405,7 @@ class App extends Component {
           isInFavorite={this.isInFavorite}
           addHistory={this.addHistory}
           onRepoToggle={categoryIndex => {
-            this.toggleRepoCategory(repo.url, categoryIndex)
+            this.toggleRepoCategory(index, categoryIndex)
           }}
         />
       )
