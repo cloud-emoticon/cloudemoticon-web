@@ -39,7 +39,7 @@ const Repository = props => {
         removeFavorite={props.removeFavorite}
         isInFavorite={props.isInFavorite}
         onToggle={() => {
-          props.onRepoToggle(category.name)
+          props.onRepoToggle(i)
         }}
       />
     )

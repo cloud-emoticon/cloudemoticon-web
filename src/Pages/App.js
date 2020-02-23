@@ -228,7 +228,7 @@ class App extends Component {
     window.localStorage.setItem('repos', JSON.stringify(toBePersisted))
   };
 
-  toggleRepoCategory = (repoUrl, categoryName) => {
+  toggleRepoCategory = (repoUrl, categoryIndex) => {
     this.setState({
       repos: this.state.repos.map(repo => {
         if (repo.url !== repoUrl) {
@@ -238,15 +238,16 @@ class App extends Component {
           ...repo,
           data: {
             ...repo.data,
-            categories: repo.data.categories.map(cat => {
-              if (cat.name !== categoryName) {
-                return cat
+            categories: Object.assign(
+              [],
+              repo.data.categories,
+              {
+                [categoryIndex]: {
+                  ...repo.data.categories[categoryIndex],
+                  _open: !repo.data.categories[categoryIndex]._open
+                }
               }
-              return {
-                ...cat,
-                _open: !cat._open
-              }
-            })
+            )
           }
         }
       })
@@ -353,8 +354,8 @@ class App extends Component {
           removeFavorite={this.removeFavorite}
           isInFavorite={this.isInFavorite}
           addHistory={this.addHistory}
-          onRepoToggle={categoryName => {
-            this.toggleRepoCategory(repo.url ,categoryName)
+          onRepoToggle={categoryIndex => {
+            this.toggleRepoCategory(repo.url, categoryIndex)
           }}
         />
       )
