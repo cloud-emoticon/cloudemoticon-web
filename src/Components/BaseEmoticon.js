@@ -11,7 +11,7 @@ const BaseEmoticon = props => {
       e.preventDefault();
       copy(emoticon);
       props.addHistory(emoticon);
-      props.snackbarOpen(`Copied ${emoticon}`)
+      props.openSnackbar(`Copied ${emoticon}`)
     }}>
       <ListItemText
         primary={emoticon}

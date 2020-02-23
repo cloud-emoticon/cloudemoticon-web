@@ -6,14 +6,14 @@ import IconButton from "@material-ui/core/IconButton";
 import BaseEmoticon from "./BaseEmoticon";
 
 const RepositoryEmoticon = (props) => {
-  const { snackbarOpen, addHistory, data } = props;
+  const { openSnackbar, addHistory, data } = props;
   const { emoticon, description } = data;
   const isInFavorite = props.isInFavorite(emoticon);
 
   return (
     <BaseEmoticon
       addHistory={addHistory}
-      snackbarOpen={snackbarOpen}
+      openSnackbar={openSnackbar}
       data={data}
     >
       <ListItemSecondaryAction>
@@ -21,10 +21,10 @@ const RepositoryEmoticon = (props) => {
           e.preventDefault();
           if (isInFavorite) {
             props.removeFavorite(emoticon);
-            props.snackbarOpen(`Removed ${emoticon} from favorites`)
+            props.openSnackbar(`Removed ${emoticon} from favorites`)
           } else {
             props.addFavorite(emoticon, description);
-            props.snackbarOpen(`Added ${emoticon} to favorites`)
+            props.openSnackbar(`Added ${emoticon} to favorites`)
           }
         }}>
           {isInFavorite ? <FavoriteIcon /> : <NoFavoriteIcon />}

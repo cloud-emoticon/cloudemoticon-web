@@ -7,48 +7,37 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List"
 
-class Category extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: true
-    }
-  }
-
-  render() {
-    const data = this.props.data;
-    const emoticonItems = data['entries'].map((entry, i) => {
-      return (
-        <RepositoryEmoticon
-            key={i}
-            data={entry}
-            addHistory={this.props.addHistory}
-            snackbarOpen={this.props.snackbarOpen}
-            addFavorite={this.props.addFavorite}
-            removeFavorite={this.props.removeFavorite}
-            isInFavorite={this.props.isInFavorite}
-        />
-      )
-    });
+const Category = props => {
+  const data = props.data;
+  const emoticonItems = data.entries.map((entry, i) => {
     return (
-      <React.Fragment>
-        <ListItem button onClick={e => {
-          e.preventDefault();
-          this.setState({
-            open: !this.state.open
-          })
-        }}>
-          <ListItemText primary={data['name']} />
-          {this.state.open ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-          <List>
-            {emoticonItems}
-          </List>
-        </Collapse>
-      </React.Fragment>
+      <RepositoryEmoticon
+        key={i}
+        data={entry}
+        addHistory={props.addHistory}
+        openSnackbar={props.openSnackbar}
+        addFavorite={props.addFavorite}
+        removeFavorite={props.removeFavorite}
+        isInFavorite={props.isInFavorite}
+      />
     )
-  }
-}
+  });
+  return (
+    <React.Fragment>
+      <ListItem button onClick={e => {
+        e.preventDefault();
+        props.onToggle()
+      }}>
+        <ListItemText primary={data.name}/>
+        {data._open ? <ExpandLess/> : <ExpandMore/>}
+      </ListItem>
+      <Collapse in={data._open} timeout="auto" unmountOnExit>
+        <List>
+          {emoticonItems}
+        </List>
+      </Collapse>
+    </React.Fragment>
+  )
+};
 
 export default Category

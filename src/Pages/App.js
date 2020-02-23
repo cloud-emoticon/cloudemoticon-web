@@ -33,7 +33,7 @@ const styles = theme => createStyles({
   },
   secondaryFab: {
     position: 'fixed',
-    bottom: theme.spacing(12),
+    bottom: theme.spacing(11),
     right: theme.spacing(3),
   }
 });
@@ -113,7 +113,16 @@ class App extends Component {
         this.state.repos,
         { [index]: {
             ...this.state.repos[index],
-            loading, error, data
+            loading, error,
+            data: {
+              ...data,
+              categories: data.categories.map(cat => {
+                return {
+                  ...cat,
+                  _open: true
+                }
+              })
+            }
           }
         }
       )
@@ -219,13 +228,38 @@ class App extends Component {
     window.localStorage.setItem('repos', JSON.stringify(toBePersisted))
   };
 
-  snackbarOpen = (text) => {
+  toggleRepoCategory = (repoUrl, categoryName) => {
+    this.setState({
+      repos: this.state.repos.map(repo => {
+        if (repo.url !== repoUrl) {
+          return repo
+        }
+        return {
+          ...repo,
+          data: {
+            ...repo.data,
+            categories: repo.data.categories.map(cat => {
+              if (cat.name !== categoryName) {
+                return cat
+              }
+              return {
+                ...cat,
+                _open: !cat._open
+              }
+            })
+          }
+        }
+      })
+    })
+  };
+
+  openSnackbar = (text) => {
     this.setState({
       snackbar: text,
     });
   };
 
-  snackbarClose = () => {
+  closeSnackbar = () => {
     this.setState({
       snackbar: false,
     });
@@ -314,18 +348,21 @@ class App extends Component {
           loading={this.state.repos[index].loading}
           error={this.state.repos[index].error}
           data={this.state.repos[index].data}
-          snackbarOpen={this.snackbarOpen}
+          openSnackbar={this.openSnackbar}
           addFavorite={this.addFavorite}
           removeFavorite={this.removeFavorite}
           isInFavorite={this.isInFavorite}
           addHistory={this.addHistory}
+          onRepoToggle={categoryName => {
+            this.toggleRepoCategory(repo.url ,categoryName)
+          }}
         />
       )
     });
     return [
       <Favorites
         favorites={this.state.favorites}
-        snackbarOpen={this.snackbarOpen}
+        openSnackbar={this.openSnackbar}
         addFavorite={this.addFavorite}
         removeFavorite={this.removeFavorite}
         isInFavorite={this.isInFavorite}
@@ -333,7 +370,7 @@ class App extends Component {
       />,
       <History
         history={this.state.history}
-        snackbarOpen={this.snackbarOpen}
+        openSnackbar={this.openSnackbar}
         addHistory={this.addHistory}
       />,
       ...repoPages,
@@ -419,7 +456,7 @@ class App extends Component {
           open={this.state.snackbar !== false}
           message={this.state.snackbar}
           autoHideDuration={2000}
-          onClose={this.snackbarClose}
+          onClose={this.closeSnackbar}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
