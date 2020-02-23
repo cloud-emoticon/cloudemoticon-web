@@ -1,8 +1,8 @@
 import React from 'react'
-import RepositoryEmoticon from '../Components/RepositoryEmoticon'
 import List from '@material-ui/core/List';
 import EmptyView from "../Components/EmptyView";
 import EmptyViewText from "../Components/EmptyViewText";
+import FavoriteEmoticon from "../Components/FavoriteEmoticon";
 
 const Favorites = (props) => {
   const favorites = props.favorites;
@@ -18,7 +18,7 @@ const Favorites = (props) => {
   }
   const items = favorites.map((item, i) => {
     return (
-      <RepositoryEmoticon
+      <FavoriteEmoticon
         key={i}
         data={item}
         addHistory={props.addHistory}

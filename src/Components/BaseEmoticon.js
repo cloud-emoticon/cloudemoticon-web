@@ -13,11 +13,12 @@ const BaseEmoticon = props => {
       props.addHistory(emoticon);
       props.openSnackbar(`Copied ${emoticon}`)
     }}>
+      {props.icon}
       <ListItemText
         primary={emoticon}
         secondary={description}
       />
-      {props.children}
+      {props.secondaryAction}
     </ListItem>
   )
 };

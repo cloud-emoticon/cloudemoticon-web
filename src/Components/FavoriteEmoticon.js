@@ -1,9 +1,11 @@
 import React from 'react'
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import BaseEmoticon from "./BaseEmoticon";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import FavoriteIconButton from "./FavoriteIconButton";
 
-const RepositoryEmoticon = props => {
+const FavoriteEmoticon = props => {
   const { addHistory, data, removeFavorite, addFavorite, openSnackbar } = props;
   const { emoticon, description } = data;
   const isInFavorite = props.isInFavorite(emoticon);
@@ -13,6 +15,11 @@ const RepositoryEmoticon = props => {
       addHistory={addHistory}
       openSnackbar={openSnackbar}
       data={data}
+      icon={
+        <ListItemIcon>
+          <DragIndicatorIcon />
+        </ListItemIcon>
+      }
       secondaryAction={
         <ListItemSecondaryAction>
           <FavoriteIconButton
@@ -29,4 +36,4 @@ const RepositoryEmoticon = props => {
   );
 };
 
-export default RepositoryEmoticon
+export default FavoriteEmoticon
