@@ -20,16 +20,22 @@ import Fab from "@material-ui/core/Fab"
 import DualTextDialog from "../Components/DualTextDialog";
 import { createStyles, withStyles } from "@material-ui/core/styles";
 import xmlToJsonRepo from "../utils/xmlToJsonRepo";
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
 
 const styles = theme => createStyles({
-  fab: {
+  primaryFab: {
     position: 'fixed',
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
+  secondaryFab: {
+    position: 'fixed',
+    bottom: theme.spacing(12),
+    right: theme.spacing(3),
+  }
 });
 
 class App extends Component {
@@ -43,7 +49,7 @@ class App extends Component {
           ...repo,
           loading: true,
           error: undefined,
-          data: undefined
+          data: undefined,
         }
       }),
       snackbar: false,
@@ -231,7 +237,7 @@ class App extends Component {
 
     const fabs = [
       (
-        <Fab color="primary" className={classes.fab} onClick={e => {
+        <Fab color="secondary" className={classes.primaryFab} onClick={e => {
           e.preventDefault();
           this.setState({
             newFavoriteDialogOpen: true
@@ -241,7 +247,7 @@ class App extends Component {
         </Fab>
       ),
       (
-        <Fab color="primary" className={classes.fab} onClick={e => {
+        <Fab color="secondary" className={classes.primaryFab} onClick={e => {
           e.preventDefault();
           this.clearHistory()
         }}>
@@ -250,16 +256,21 @@ class App extends Component {
       ),
       ...this.state.repos.map((_, index) => {
         return (
-          <Fab color="primary" className={classes.fab} onClick={e => {
-            e.preventDefault();
-            this.fetchRepo(index)
-          }}>
-            <RefreshIcon />
-          </Fab>
+          <React.Fragment>
+            <Fab color="secondary" className={classes.primaryFab} onClick={e => {
+              e.preventDefault();
+              this.fetchRepo(index)
+            }}>
+              <RefreshIcon />
+            </Fab>
+            <Fab color="primary" size="small" className={classes.secondaryFab}>
+              <ExpandLessIcon />
+            </Fab>
+          </React.Fragment>
         )
       }),
       (
-        <Fab color="primary" className={classes.fab} onClick={e => {
+        <Fab color="secondary" className={classes.primaryFab} onClick={e => {
           e.preventDefault();
           this.setState({
             newRepoDialogOpen: true
