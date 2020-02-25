@@ -23,6 +23,8 @@ import xmlToJsonRepo from "../utils/xmlToJsonRepo";
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SwipeableViews from 'react-swipeable-views';
+import EditIcon from '@material-ui/icons/Edit'
+import DoneIcon from '@material-ui/icons/Done'
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
@@ -57,7 +59,8 @@ class App extends Component {
       snackbar: false,
       tabIndex: 0,
       newFavoriteDialogOpen: false,
-      newRepoDialogOpen: false
+      newRepoDialogOpen: false,
+      editingFavorites: false,
     };
     this.fetchRepo = this.fetchRepo.bind(this)
   }
@@ -147,6 +150,13 @@ class App extends Component {
 
   isInFavorite = (emoticon) => {
     return this.state.favorites.map(f => f.emoticon).indexOf(emoticon) !== -1
+  };
+
+  reorderFavorite = (fromIndex, toIndex) => {
+    const favorites = this.state.favorites;
+    [favorites[fromIndex], favorites[toIndex]] = [favorites[toIndex], favorites[fromIndex]];
+    this.setState({ favorites });
+    this.setPersistentFavorites(favorites)
   };
 
   getPersistentFavorites = () => {
@@ -306,14 +316,35 @@ class App extends Component {
 
     const fabs = [
       (
-        <Fab color="secondary" className={classes.primaryFab} onClick={e => {
-          e.preventDefault();
-          this.setState({
-            newFavoriteDialogOpen: true
-          })
-        }}>
-          <AddIcon />
-        </Fab>
+        <React.Fragment>
+          <Fab color="secondary" className={classes.primaryFab} onClick={e => {
+            e.preventDefault();
+            this.setState({
+              newFavoriteDialogOpen: true
+            })
+          }}>
+            <AddIcon />
+          </Fab>
+          {
+            this.state.editingFavorites ?
+              <Fab color="primary" size="small" className={classes.secondaryFab} onClick={e => {
+                e.preventDefault();
+                this.setState({
+                  editingFavorites: false
+                })
+              }}>
+                <DoneIcon />
+              </Fab> :
+              <Fab color="primary" size="small" className={classes.secondaryFab} onClick={e => {
+                e.preventDefault();
+                this.setState({
+                  editingFavorites: true
+                })
+              }}>
+                <EditIcon />
+              </Fab>
+          }
+        </React.Fragment>
       ),
       (
         <Fab color="secondary" className={classes.primaryFab} onClick={e => {
@@ -419,6 +450,8 @@ class App extends Component {
         removeFavorite={this.removeFavorite}
         isInFavorite={this.isInFavorite}
         addHistory={this.addHistory}
+        isEditing={this.state.editingFavorites}
+        reorderFavorite={this.reorderFavorite}
       />,
       <History
         history={this.state.history}
