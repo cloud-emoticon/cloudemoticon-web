@@ -5,7 +5,7 @@ import EmptyViewText from "../Components/EmptyViewText";
 import FavoriteEmoticon from "../Components/FavoriteEmoticon";
 
 const Favorites = (props) => {
-  const favorites = props.favorites;
+  const { favorites, reorderFavorite } = props;
   if (!favorites || favorites.length === 0) {
     return (
       <EmptyView>
@@ -27,6 +27,14 @@ const Favorites = (props) => {
         removeFavorite={props.removeFavorite}
         isInFavorite={props.isInFavorite}
         isEditing={props.isEditing}
+        showMoveUp={i !== 0}
+        showMoveDown={i !== favorites.length - 1}
+        onMoveUp={() => {
+          reorderFavorite(i, i - 1)
+        }}
+        onMoveDown={() => {
+          reorderFavorite(i, i + 1)
+        }}
       />
     )
   });

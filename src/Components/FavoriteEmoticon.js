@@ -1,14 +1,26 @@
 import React from 'react'
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import BaseEmoticon from "./BaseEmoticon";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import FavoriteIconButton from "./FavoriteIconButton";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit"
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+
 
 const FavoriteEmoticon = props => {
-  const { addHistory, data, removeFavorite, addFavorite, openSnackbar, isEditing } = props;
+  const {
+    data,
+    addHistory,
+    removeFavorite,
+    addFavorite,
+    openSnackbar,
+    isEditing,
+    showMoveUp,
+    showMoveDown,
+    onMoveUp,
+    onMoveDown
+  } = props;
   const { emoticon, description } = data;
   const isInFavorite = props.isInFavorite(emoticon);
 
@@ -17,15 +29,28 @@ const FavoriteEmoticon = props => {
       addHistory={addHistory}
       openSnackbar={openSnackbar}
       data={data}
-      icon={
-        isEditing ?
-          <ListItemIcon>
-            <DragIndicatorIcon />
-          </ListItemIcon> :
-          null
-      }
       secondaryAction={
         <ListItemSecondaryAction>
+          {
+            isEditing ?
+              <IconButton disabled={!showMoveUp} onClick={e => {
+                e.preventDefault();
+                onMoveUp();
+              }}>
+                <ArrowUpwardIcon />
+              </IconButton> :
+              null
+          }
+          {
+            isEditing ?
+              <IconButton disabled={!showMoveDown} onClick={e => {
+                e.preventDefault();
+                onMoveDown();
+              }}>
+                <ArrowDownwardIcon />
+              </IconButton> :
+              null
+          }
           {
             isEditing ?
               <IconButton>
