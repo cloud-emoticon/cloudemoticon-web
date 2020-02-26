@@ -6,6 +6,14 @@ import SettingsHeader from "../Components/SettingsHeader";
 import SettingsDivider from "../Components/SettingsDivider";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import EmptyView from "../Components/EmptyView";
+import EmptyViewText from "../Components/EmptyViewText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import IconButton from "@material-ui/core/IconButton";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+
 
 const RemoteReposIndexUrl = "https://cloud-emoticon-store-bridge.herokuapp.com/json";
 
@@ -32,7 +40,10 @@ class RepoManager extends React.Component {
           data: data.map(item => {
             return {
               name: item.name,
-              url: item.codeurl
+              url: item.codeurl,
+              description: item.introduction,
+              authorName: item.creator,
+              authorAvatarUrl: item.iconurl,
             }
           }),
         })
@@ -62,19 +73,34 @@ class RepoManager extends React.Component {
     }
     const error = this.state.error;
     if (error) {
-      return <div>{error.message}</div>
+      return (
+        <EmptyView>
+          <EmptyViewText
+            firstLine="(((( ；ﾟДﾟ)))))))"
+            secondLine={`Ooops. Something bad happened: ${error.toString()}`}
+          />
+        </EmptyView>
+      )
     }
     return this.state.data.map((repo, i)=> {
-      const { name, url } = repo;
+      const { name, url, description, authorName, authorAvatarUrl } = repo;
       return (
-        <ListItem key={i} button disabled={this.props.isInRepos(url)} onClick={e => {
-          e.preventDefault();
-          this.props.addRepo(name, url)
-        }}>
+        <ListItem key={i}>
+          <ListItemAvatar>
+            <Avatar alt={authorName} src={authorAvatarUrl} />
+          </ListItemAvatar>
           <ListItemText
-            primary={name}
-            secondary={url}
+            primary={`${name} by ${authorName}`}
+            secondary={description}
           />
+          <ListItemSecondaryAction>
+            <IconButton disabled={this.props.isInRepos(url)} onClick={e => {
+              e.preventDefault();
+              this.props.addRepo(name, url, description, authorName, authorAvatarUrl)
+            }}>
+              <AddCircleIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
         </ListItem>
       )
     })
@@ -83,26 +109,46 @@ class RepoManager extends React.Component {
   render() {
     const repos = this.props.repos;
     const fixedLocalRepos = repos.filter(repo => repo.fixed).map((repo, i) => {
+      const { name, description, authorName, authorAvatarUrl } = repo;
       return (
-        <ListItem key={i} disabled={true}>
+        <ListItem key={i}>
+          {
+            authorAvatarUrl ?
+              <ListItemAvatar>
+                <Avatar alt={authorName} src={authorAvatarUrl} />
+              </ListItemAvatar> :
+              null
+          }
           <ListItemText
-            primary={repo.name}
-            secondary={repo.url}
+            primary={`${name} by ${authorName || '(Unknown)'}`}
+            secondary={description || '(No description. You might need to re-add the repo.)'}
           />
         </ListItem>
       )
     });
     const localRepos = repos.filter(repo => !repo.fixed).map((repo, i) => {
-      const { name, url } = repo;
+      const { name, url, description, authorName, authorAvatarUrl } = repo;
       return (
-        <ListItem key={fixedLocalRepos.length + i} button onClick={e => {
-          e.preventDefault();
-          this.props.removeRepo(url)
-        }}>
+        <ListItem key={fixedLocalRepos.length + i}>
+          {
+            authorAvatarUrl ?
+              <ListItemAvatar>
+                <Avatar alt={authorName} src={authorAvatarUrl} />
+              </ListItemAvatar> :
+              null
+          }
           <ListItemText
-            primary={name}
-            secondary={url}
+            primary={`${name} by ${authorName || '(Unknown)'}`}
+            secondary={description || '(No description. You might need to re-add the repo.)'}
           />
+          <ListItemSecondaryAction>
+            <IconButton onClick={e => {
+              e.preventDefault();
+              this.props.removeRepo(url)
+            }}>
+              <RemoveCircleIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
         </ListItem>
       )
     });

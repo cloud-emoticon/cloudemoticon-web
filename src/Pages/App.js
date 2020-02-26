@@ -206,13 +206,16 @@ class App extends Component {
     window.localStorage.setItem('history', JSON.stringify(newHistory))
   };
 
-  addRepo = (newRepoName, newRepoUrl) => {
+  addRepo = (newRepoName, newRepoUrl, newRepoDescription, newRepoAuthorName, newRepoAuthorAvatarUrl) => {
     const oldReposLength = this.state.repos.length;
     const repos = [
       ...this.state.repos,
       {
         url: newRepoUrl,
         name: newRepoName,
+        description: newRepoDescription,
+        authorName: newRepoAuthorName,
+        authorAvatarUrl: newRepoAuthorAvatarUrl,
         loading: true,
         error: undefined,
         data: undefined
@@ -250,7 +253,10 @@ class App extends Component {
     const toBePersisted = newRepos.map(repo => {
       return {
         "name": repo.name,
-        "url": repo.url
+        "url": repo.url,
+        "description": repo.description,
+        "authorName": repo.authorName,
+        "authorAvatarUrl": repo.authorAvatarUrl,
       }
     });
     window.localStorage.setItem('repos', JSON.stringify(toBePersisted))
