@@ -13,7 +13,6 @@ class DualTextDialog extends React.Component {
       primaryText: '',
       secondaryText: '',
       primaryError: false,
-      primaryHelperText: '',
     }
   }
 
@@ -33,11 +32,10 @@ class DualTextDialog extends React.Component {
               this.setState({
                 primaryText: newValue,
                 primaryError: false,
-                primaryHelperText: '',
               })
             }}
             error={this.state.primaryError}
-            helperText={this.state.primaryHelperText}
+            helperText={this.state.primaryError === false ? '' : this.state.primaryError}
           />
           <TextField
             margin="dense"
@@ -61,8 +59,7 @@ class DualTextDialog extends React.Component {
             const error = this.props.onValidate(primaryText);
             if (error) {
               this.setState({
-                primaryError: true,
-                primaryHelperText: error,
+                primaryError: error,
               })
             } else {
               this.props.onConfirm(primaryText, secondaryText);
@@ -70,7 +67,6 @@ class DualTextDialog extends React.Component {
                 primaryText: '',
                 secondaryText: '',
                 primaryError: false,
-                primaryHelperText: '',
               });
               this.props.onClose()
             }
