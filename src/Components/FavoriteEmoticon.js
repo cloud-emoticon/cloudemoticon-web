@@ -19,7 +19,8 @@ const FavoriteEmoticon = props => {
     showMoveUp,
     showMoveDown,
     onMoveUp,
-    onMoveDown
+    onMoveDown,
+    onEdit
   } = props;
   const { emoticon, description } = data;
   const isInFavorite = props.isInFavorite(emoticon);
@@ -53,7 +54,10 @@ const FavoriteEmoticon = props => {
           }
           {
             isEditing ?
-              <IconButton>
+              <IconButton onClick={e => {
+                e.preventDefault();
+                onEdit()
+              }}>
                 <EditIcon />
               </IconButton> :
               null

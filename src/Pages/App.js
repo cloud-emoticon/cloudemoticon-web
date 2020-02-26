@@ -25,6 +25,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SwipeableViews from 'react-swipeable-views';
 import EditIcon from '@material-ui/icons/Edit'
 import DoneIcon from '@material-ui/icons/Done'
+import ControlledDualTextDialog from "../Components/ControlledDualTextDialog";
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
@@ -61,6 +62,11 @@ class App extends Component {
       newFavoriteDialogOpen: false,
       newRepoDialogOpen: false,
       editingFavorites: false,
+      editFavoriteDialogOpen: false,
+      editingFavoriteIndex: -1,
+      editingFavoriteEmoticon: '',
+      editingFavoriteDescription: '',
+      editingFavoriteError: false
     };
     this.fetchRepo = this.fetchRepo.bind(this)
   }
@@ -155,6 +161,16 @@ class App extends Component {
   reorderFavorite = (fromIndex, toIndex) => {
     const favorites = this.state.favorites;
     [favorites[fromIndex], favorites[toIndex]] = [favorites[toIndex], favorites[fromIndex]];
+    this.setState({ favorites });
+    this.setPersistentFavorites(favorites)
+  };
+
+  replaceFavorite = (index, newEmotion, newDescription) => {
+    const favorites = this.state.favorites;
+    favorites[index] = {
+      emoticon: newEmotion,
+      description: newDescription
+    };
     this.setState({ favorites });
     this.setPersistentFavorites(favorites)
   };
@@ -452,6 +468,16 @@ class App extends Component {
         addHistory={this.addHistory}
         isEditing={this.state.editingFavorites}
         reorderFavorite={this.reorderFavorite}
+        onEditFavorite={index => {
+          const { emoticon, description } = this.state.favorites[index];
+          this.setState({
+            editFavoriteDialogOpen: true,
+            editingFavoriteIndex: index,
+            editingFavoriteEmoticon: emoticon,
+            editingFavoriteDescription: description,
+            editingFavoriteError: false
+          })
+        }}
       />,
       <History
         history={this.state.history}
@@ -487,6 +513,106 @@ class App extends Component {
     )
   };
 
+  renderNewFavoriteDialog = () => {
+    return (
+      <DualTextDialog
+        open={this.state.newFavoriteDialogOpen}
+        onClose={() => {
+          this.setState({
+            newFavoriteDialogOpen: false
+          })
+        }}
+        title='Add favorite'
+        primaryLabel='Emoticon'
+        secondaryLabel='Description'
+        onValidate={emoticon => {
+          if (!emoticon) {
+            return 'Emoticon cannot be empty'
+          }
+          if (this.isInFavorite(emoticon)) {
+            return 'This emoticon already exists'
+          }
+          return false
+        }}
+        onConfirm={(emoticon, description) => {
+          this.addFavorite(emoticon, description)
+        }}
+      />
+    )
+  };
+
+  renderNewRepoDialog = () => {
+    return (
+      <DualTextDialog
+        open={this.state.newRepoDialogOpen}
+        onClose={() => {
+          this.setState({
+            newRepoDialogOpen: false
+          })
+        }}
+        title='Add repo'
+        primaryLabel='URL'
+        secondaryLabel='Alias'
+        onValidate={url => {
+          if (!url) {
+            return 'URL cannot be empty'
+          }
+          if (this.isInRepos(url)) {
+            return 'This URL already exists'
+          }
+          return false
+        }}
+        onConfirm={(url, alias) => {
+          this.addRepo(alias, url)
+        }}
+      />
+    )
+  };
+
+  renderEditFavoriteDialog = () => {
+    return (
+      <ControlledDualTextDialog
+        open={this.state.editFavoriteDialogOpen}
+        onClose={() => {
+          this.setState({
+            editFavoriteDialogOpen: false
+          })
+        }}
+        title="Edit favorite"
+        primaryLabel="Emoticon"
+        secondaryLabel="Description"
+        onValidate={emoticon => {
+          if (!emoticon) {
+            return 'Emoticon cannot be empty'
+          }
+          return false
+        }}
+        onConfirm={(newEmoticon, newDescription) => {
+          const index = this.state.editingFavoriteIndex;
+          this.replaceFavorite(index, newEmoticon, newDescription);
+        }}
+        primaryText={this.state.editingFavoriteEmoticon}
+        onChangePrimaryText={newEmoticon => {
+          this.setState({
+            editingFavoriteEmoticon: newEmoticon,
+          })
+        }}
+        secondaryText={this.state.editingFavoriteDescription}
+        onChangeSecondaryText={newDescription => {
+          this.setState({
+            editingFavoriteDescription: newDescription
+          })
+        }}
+        primaryError={this.state.editingFavoriteError}
+        onChangePrimaryError={error => {
+          this.setState({
+            editingFavoriteError: error
+          })
+        }}
+      />
+    )
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -507,48 +633,9 @@ class App extends Component {
         </AppBar>
         {this.renderPages()}
         {this.renderFabs()}
-        <DualTextDialog
-          open={this.state.newFavoriteDialogOpen}
-          onClose={() => {
-            this.setState({
-              newFavoriteDialogOpen: false
-            })
-          }}
-          title='Add favorite'
-          primaryLabel='Emoticon'
-          secondaryLabel='Description'
-          onValidate={emoticon => {
-            if (this.isInFavorite(emoticon)) {
-              return 'This emoticon already exists'
-            } else {
-              return false
-            }
-          }}
-          onConfirm={(emoticon, description) => {
-            this.addFavorite(emoticon, description)
-          }}
-        />
-        <DualTextDialog
-          open={this.state.newRepoDialogOpen}
-          onClose={() => {
-            this.setState({
-              newRepoDialogOpen: false
-            })
-          }}
-          title='Add repo'
-          primaryLabel='URL'
-          secondaryLabel='Alias'
-          onValidate={url => {
-            if (this.isInRepos(url)) {
-              return 'This URL already exists'
-            } else {
-              return false
-            }
-          }}
-          onConfirm={(url, alias) => {
-            this.addRepo(alias, url)
-          }}
-        />
+        {this.renderNewFavoriteDialog()}
+        {this.renderNewRepoDialog()}
+        {this.renderEditFavoriteDialog()}
         <Snackbar
           open={this.state.snackbar !== false}
           message={this.state.snackbar}
