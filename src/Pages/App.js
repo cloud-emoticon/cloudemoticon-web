@@ -233,7 +233,10 @@ class App extends Component {
         data: undefined
       }
     ];
-    this.setState({ repos }, () => {
+    this.setState({
+      repos,
+      tabIndex: this.state.tabIndex + 1
+    }, () => {
       // only fetch repo after the new repo item is added to state
       this.fetchRepo(oldReposLength)
     });
@@ -244,7 +247,10 @@ class App extends Component {
     const repos = this.state.repos.filter(repo => {
       return repo.url !== repoUrl
     });
-    this.setState({ repos });
+    this.setState({
+      repos,
+      tabIndex: this.state.tabIndex - 1
+    });
     this.setPersistentRepos(repos)
   };
 
