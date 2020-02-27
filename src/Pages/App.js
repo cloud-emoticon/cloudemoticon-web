@@ -512,7 +512,7 @@ class App extends Component {
       <Settings />
     ].map((page, i  ) => {
       return (
-        <div key={i}>
+        <div key={i} hidden={this.state.tabIndex !== i}>
           {page}
         </div>
       )
