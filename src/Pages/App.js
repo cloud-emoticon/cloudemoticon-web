@@ -18,7 +18,7 @@ import RefreshIcon from "@material-ui/icons/Refresh"
 import RepoManager from "./RepoManager";
 import Fab from "@material-ui/core/Fab"
 import DualTextDialog from "../Components/DualTextDialog";
-import { createStyles, withStyles } from "@material-ui/core/styles";
+import {createStyles, MuiThemeProvider, withStyles} from "@material-ui/core/styles";
 import xmlToJsonRepo from "../utils/xmlToJsonRepo";
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -26,9 +26,21 @@ import SwipeableViews from 'react-swipeable-views';
 import EditIcon from '@material-ui/icons/Edit'
 import DoneIcon from '@material-ui/icons/Done'
 import ControlledDualTextDialog from "../Components/ControlledDualTextDialog";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
 const MaxHistoryCount = 50;
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#2196f3'
+    },
+    secondary: {
+      main: '#e91e63'
+    }
+  }
+});
 
 const styles = theme => createStyles({
   primaryFab: {
@@ -621,38 +633,40 @@ class App extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <CssBaseline/>
-        <AppBar position='sticky'>
-          <Tabs
-            value={this.state.tabIndex}
-            onChange={(e, newTabIndex) => {
-              e.preventDefault();
-              this.setState({
-                tabIndex: newTabIndex
-              })
+      <MuiThemeProvider theme={theme}>
+        <React.Fragment>
+          <CssBaseline/>
+          <AppBar position='sticky'>
+            <Tabs
+              value={this.state.tabIndex}
+              onChange={(e, newTabIndex) => {
+                e.preventDefault();
+                this.setState({
+                  tabIndex: newTabIndex
+                })
+              }}
+              variant='scrollable'
+            >
+              {this.renderTabs()}
+            </Tabs>
+          </AppBar>
+          {this.renderPages()}
+          {this.renderFabs()}
+          {this.renderNewFavoriteDialog()}
+          {this.renderNewRepoDialog()}
+          {this.renderEditFavoriteDialog()}
+          <Snackbar
+            open={this.state.snackbar !== false}
+            message={this.state.snackbar}
+            autoHideDuration={2000}
+            onClose={this.closeSnackbar}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
             }}
-            variant='scrollable'
-          >
-            {this.renderTabs()}
-          </Tabs>
-        </AppBar>
-        {this.renderPages()}
-        {this.renderFabs()}
-        {this.renderNewFavoriteDialog()}
-        {this.renderNewRepoDialog()}
-        {this.renderEditFavoriteDialog()}
-        <Snackbar
-          open={this.state.snackbar !== false}
-          message={this.state.snackbar}
-          autoHideDuration={2000}
-          onClose={this.closeSnackbar}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-        />
-      </React.Fragment>
+          />
+        </React.Fragment>
+      </MuiThemeProvider>
     );
   }
 }
