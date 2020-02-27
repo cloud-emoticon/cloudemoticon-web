@@ -1,7 +1,7 @@
 {
   "name": "cloudemoticon2",
-  "version": "1.6.0",
-  "vercode": 8,
+  "version": "1.6.1",
+  "vercode": 9,
   "license": "MIT",
   "dependencies": {
     "@capacitor/android": "^1.5.0",
