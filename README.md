@@ -40,6 +40,11 @@ yarn open-ios
 yarn open-android
 ```
 
+## Sync webapp and open Electron project
+```bash
+yarn open-electron
+```
+
 ## Frameworks
 * The project is bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app)
 * The universal (e.g. iOS/Android) capability is backed by [Capacitor](https://capacitor.ionicframework.com/)
