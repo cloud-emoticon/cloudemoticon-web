@@ -30,6 +30,11 @@ yarn build
 yarn sync-cap
 ```
 
+## Sync webapp and open iOS project
+```bash
+yarn open-ios
+```
+
 ## Sync webapp and open Android project
 ```bash
 yarn open-android

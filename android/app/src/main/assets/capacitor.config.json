@@ -1,11 +1,11 @@
 {
-  "appId": "org.ktachibana.cloudemoticon",
-  "appName": "Cloud Emoticon 2",
-  "bundledWebRuntime": false,
-  "npmClient": "yarn",
-  "webDir": "build",
-  "cordova": {},
-  "ios": {
-    "contentInset": "always"
-  }
+	"appId": "org.ktachibana.cloudemoticon",
+	"appName": "Cloud Emoticon 2",
+	"bundledWebRuntime": false,
+	"npmClient": "yarn",
+	"webDir": "build",
+	"cordova": {},
+	"ios": {
+		"contentInset": "always"
+	}
 }
