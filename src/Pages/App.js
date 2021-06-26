@@ -28,7 +28,7 @@ import DoneIcon from '@material-ui/icons/Done'
 import ControlledDualTextDialog from "../Components/ControlledDualTextDialog";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
-export const DefaultRepoUrl = 'https://ktachibana.party/cloudemoticon/default.json';
+export const DefaultRepoUrl = 'https://raw.githubusercontent.com/cloud-emoticon/store-repos/master/kt-favorites.json';
 const MaxHistoryCount = 50;
 
 const theme = createMuiTheme({
