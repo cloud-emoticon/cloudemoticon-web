@@ -1,7 +1,7 @@
 {
   "name": "cloudemoticon2-desktop",
   "version": "1.0.0",
-  "description": "An Amazing Capacitor App",
+  "description": "A cloud solution to your favorite emoticons on all of your devices!",
   "main": "./build/src/index.js",
   "scripts": {
     "build": "tsc",
@@ -26,11 +26,10 @@
     "capacitor",
     "electron"
   ],
-  "author": "",
   "license": "MIT",
   "build": {
-    "appId": "com.example.capacitor-app",
-    "productName": "Capacitor App",
+    "appId": "moe.emoticon.cloudemoticon2",
+    "productName": "Cloud Emoticon 2",
     "files": [
       "assets/**",
       "build/**",
