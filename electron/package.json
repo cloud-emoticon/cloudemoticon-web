@@ -1,6 +1,6 @@
 {
   "name": "cloudemoticon2-desktop",
-  "version": "1.0.0",
+  "version": "1.6.1",
   "description": "A cloud solution to your favorite emoticons on all of your devices!",
   "main": "./build/src/index.js",
   "scripts": {
