@@ -15,7 +15,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 
-const RemoteReposIndexUrl = "https://cloud-emoticon-store-bridge.herokuapp.com/json";
+const RemoteReposIndexUrl = "https://emoticon.moe/store.json";
 
 class RepoManager extends React.Component {
   constructor(props) {
