@@ -1,5 +1,3 @@
-[Deprecated]
-
 # cloudemoticon2
 
 Cloud Emoticon 2, as a universal web application
