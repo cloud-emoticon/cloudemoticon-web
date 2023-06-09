@@ -1,5 +1,5 @@
 {
-  "name": "cloudemoticon2-desktop",
+  "name": "cloudemoticon-desktop",
   "version": "1.6.1",
   "description": "A cloud solution to your favorite emoticons on all of your devices!",
   "main": "./build/src/index.js",
@@ -28,8 +28,8 @@
   ],
   "license": "MIT",
   "build": {
-    "appId": "moe.emoticon.cloudemoticon2",
-    "productName": "Cloud Emoticon 2",
+    "appId": "moe.emoticon.cloudemoticon",
+    "productName": "Cloud Emoticon",
     "files": [
       "assets/**",
       "build/**",
