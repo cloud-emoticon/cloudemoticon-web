@@ -1,6 +1,6 @@
-# cloudemoticon2
+# cloudemoticon-web
 
-Cloud Emoticon 2, as a universal web application
+Cloud Emoticon as a universal web application
 
 ## Prereqs
 * `Node.js`
