@@ -2,13 +2,13 @@
 
 Cloud Emoticon as a universal web application
 
-## Prereqs
+## Prerequisites
 * `Node.js`
 * `npm` and `yarn`
 
-## Prepare
+## Install webapp dependencies
 ```bash
-yarn install
+yarn install && yarn global add serve
 ```
 
 ## Run as webapp
@@ -16,28 +16,21 @@ yarn install
 yarn start
 ```
 
-## Build webapp
+## Serve production webapp
 ```bash
-yarn build
-# Then find production site under build/
+yarn serve
 ```
 
-## Sync webapp to Capacitor apps
-```bash
-yarn sync-cap
-```
-
-## Sync webapp and open Electron project
-Make sure run this first (only needed once)
+## Install Electron dependencies
 ```bash
 cd electron && npm install
 ```
 
-Then run
+## Open Electron project
 ```bash
 yarn open-electron
 ```
 
 ## Frameworks
 * The web project is bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app)
-* Electron desktop version is provided by [Capacitor](https://capacitor.ionicframework.com/)
+* Electron desktop version is supported by [Capacitor](https://capacitor.ionicframework.com/)

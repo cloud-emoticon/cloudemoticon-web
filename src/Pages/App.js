@@ -22,13 +22,19 @@ import {createStyles, MuiThemeProvider, withStyles} from "@material-ui/core/styl
 import xmlToJsonRepo from "../utils/xmlToJsonRepo";
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SwipeableViews from 'react-swipeable-views';
 import EditIcon from '@material-ui/icons/Edit'
 import DoneIcon from '@material-ui/icons/Done'
 import ControlledDualTextDialog from "../Components/ControlledDualTextDialog";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
-export const DefaultRepoUrl = 'https://raw.githubusercontent.com/cloud-emoticon/store-repos/master/kt-favorites.json';
+export const DefaultRepo = {
+ "name":"KT's favorites",
+ "url":"https://raw.githubusercontent.com/cloud-emoticon/store-repos/master/kt-favorites.json",
+ "description":"KT's favorites. What comes default by Cloud Emoticon 1 for Android.",
+ "authorName":"KTachibanaM",
+ "authorAvatarUrl":"https://raw.githubusercontent.com/cloud-emoticon/store-repos/master/avatars/KTachibana_M.jpg"
+}
+
 const MaxHistoryCount = 50;
 
 const theme = createMuiTheme({
@@ -259,12 +265,7 @@ class App extends Component {
   };
 
   getPersistentRepos = () => {
-    return JSON.parse(window.localStorage.getItem('repos')) || [
-      {
-        "name": "KT's favorites",
-        "url": DefaultRepoUrl
-      }
-    ]
+    return JSON.parse(window.localStorage.getItem('repos')) || [DefaultRepo]
   };
 
   setPersistentRepos = newRepos => {
@@ -482,7 +483,7 @@ class App extends Component {
         />
       )
     });
-    const pages = [
+    return [
       <Favorites
         favorites={this.state.favorites}
         openSnackbar={this.openSnackbar}
@@ -516,25 +517,13 @@ class App extends Component {
         isInRepos={this.isInRepos}
       />,
       <Settings />
-    ].map((page, i  ) => {
+    ].map((page, i) => {
       return (
         <div key={i} hidden={this.state.tabIndex !== i}>
           {page}
         </div>
       )
     });
-    return (
-      <SwipeableViews
-        index={this.state.tabIndex}
-        onChangeIndex={newIndex => {
-          this.setState({
-            tabIndex: newIndex
-          })
-        }}
-      >
-        {pages}
-      </SwipeableViews>
-    )
   };
 
   renderNewFavoriteDialog = () => {
