@@ -13,15 +13,16 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
     "electron": "^25.1.0",
     "react-scripts": "^2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-headless": "export BROWSER=none && react-scripts start",
-    "start-headless-win": "set BROWSER=none && react-scripts start",
-    "electron": "export ELECTRON_START_URL=http://localhost:3000 && electron .",
-    "electron-win": "set ELECTRON_START_URL=http://localhost:3000 && electron .",
+    "headless": "cross-env BROWSER=none react-scripts start",
+    "electron": "cross-env ELECTRON_START_URL=http://localhost:3000 electron .",
+    "start-electron": "concurrently \"npm run headless\" \"npm run electron\"", 
     "build": "react-scripts build",
     "eject": "react-scripts eject"
   },

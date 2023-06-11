@@ -18,11 +18,7 @@ yarn start
 
 ## Run as Electron app
 ```bash
-yarn run start-headless
-```
-Then run
-```bash
-yarn run electron
+yarn run start-electron
 ```
 
 ## Misc.
