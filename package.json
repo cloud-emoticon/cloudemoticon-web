@@ -1,11 +1,10 @@
 {
   "name": "cloudemoticon-web",
+  "productName": "Cloud Emoticon",
+  "main": "electron/main.js",
   "version": "1.6.1",
   "license": "MIT",
   "dependencies": {
-    "@capacitor-community/electron": "^3.0.1",
-    "@capacitor/cli": "^3.0.2",
-    "@capacitor/core": "^3.0.2",
     "@material-ui/core": "^4.9.1",
     "@material-ui/icons": "^4.9.1",
     "copy-to-clipboard": "^3.2.1",
@@ -14,17 +13,15 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
+    "electron": "^25.1.0",
     "react-scripts": "^2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-headless": "export BROWSER=none && react-scripts start",
+    "electron": "export ELECTRON_START_URL=http://localhost:3000 && electron .",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "sync-version": "node sync-versions.js",
-    "sync-cap": "npx cap copy && yarn sync-version",
-    "open-electron": "yarn build && yarn sync-cap && npx cap open @capacitor-community/electron",
-    "serve": "yarn build && serve -s build"
+    "eject": "react-scripts eject"
   },
   "browserslist": [
     ">0.2%",
