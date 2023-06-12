@@ -24,6 +24,7 @@
     "react-scripts": "^2.1.1"
   },
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "start": "react-scripts start",
     "headless": "cross-env BROWSER=none react-scripts start",
     "electron": "electron .",
