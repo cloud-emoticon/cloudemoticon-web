@@ -42,6 +42,9 @@
     ],
     "directories":{
       "buildResources": "assets"
+    },
+    "win": {
+      "icon": "./assets/icon.png"
     }
   },
   "browserslist": [
