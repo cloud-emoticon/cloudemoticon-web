@@ -30,7 +30,7 @@
     "start-electron": "concurrently \"npm run headless\" \"npm run electron\"",
     "build": "react-scripts build",
     "prepackage-electron": "npm run build",
-    "package-electron": "build --em.main=build/electron.js",
+    "package-electron": "electron-builder build",
     "eject": "react-scripts eject"
   },
   "build": {
