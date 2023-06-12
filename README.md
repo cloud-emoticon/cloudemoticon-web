@@ -22,4 +22,4 @@ yarn run start-electron
 ```
 
 ## Misc.
-This repo is started with [this tutorial](https://medium.com/@johndyer24/building-a-production-electron-create-react-app-application-with-shared-code-using-electron-builder-c1f70f0e2649)
+This repo is started with [this tutorial](https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3)
