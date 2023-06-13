@@ -1,6 +1,6 @@
 {
   "name": "cloudemoticon-web",
-  "description": "Your favorite emoticons in the cloud",
+  "description": "Your emotion companion",
   "author": "KTachibanaM",
   "main": "public/electron.js",
   "version": "1.4.1",
