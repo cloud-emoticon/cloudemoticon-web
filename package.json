@@ -3,7 +3,7 @@
   "description": "Your favorite emoticons in the cloud",
   "author": "KTachibanaM",
   "main": "public/electron.js",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "MIT",
   "homepage": "./",
   "dependencies": {
