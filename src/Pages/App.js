@@ -40,7 +40,7 @@ const MaxHistoryCount = 50;
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#2196f3'
+      main: '#3F51B5'
     },
     secondary: {
       main: '#e91e63'
