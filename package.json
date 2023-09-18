@@ -19,7 +19,7 @@
     "concurrently": "^8.2.0",
     "cp-cli": "^2.0.0",
     "cross-env": "^7.0.3",
-    "electron": "^25.5.0",
+    "electron": "^25.8.1",
     "electron-builder": "^23.6.0",
     "react-scripts": "^2.1.1"
   },
